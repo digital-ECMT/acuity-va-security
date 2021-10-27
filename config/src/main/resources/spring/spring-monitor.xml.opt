@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+        
+    <aop:aspectj-autoproxy />
+    
+    <bean id="performanceMonitor" class="org.springframework.aop.interceptor.PerformanceMonitorInterceptor"/>
+ 
+    <aop:config>
+        <aop:pointcut id="allServiceMethods" expression="execution(* com.acuity.va..*.*(..))
+&amp;&amp; !execution(* com.acuity.va..*.*Repository.*(..)) &amp;&amp; !execution(* org.springframework..*.*(..))
+&amp;&amp; !execution(* com.acuity.va..*.*Impl.*(..)) &amp;&amp; !execution(* com.acuity.va..*.CustomUserDetailsManager.*(..))
+&amp;&amp; !execution(* com.acuity.va..*.*Metadata.*(..))" />
+        <aop:advisor pointcut-ref="allServiceMethods" advice-ref="performanceMonitor" order="2" />
+    </aop:config>
+</beans>

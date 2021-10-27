@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" order="-1">
+        <security:expression-handler ref="expressionHandler"/>
+    </security:global-method-security>
+
+    <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="pe"/>
+        <property name="permissionCacheOptimizer" ref="permissionCacheOptimizer"/>
+    </bean>
+    
+    <bean id="permissionCacheOptimizer" class="org.springframework.security.acls.AclPermissionCacheOptimizer">
+        <constructor-arg ref="aclService"/>
+    </bean>
+
+    <bean id="permissionFactory" class="org.springframework.security.acls.domain.DefaultPermissionFactory">
+        <constructor-arg value="com.acuity.va.security.acl.permissions.AcuityPermissions"/>
+    </bean>
+
+    <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="aclCache"/>
+        <constructor-arg ref="aclAuthzStrategy"/>
+        <constructor-arg ref="bitMaskingPermissionGrantingStrategy"/>
+        <!--<constructor-arg ref="consoleAuditLogger"/>-->
+        <property name="permissionFactory" ref="permissionFactory"/>
+    </bean>
+    
+    <bean id="consoleAuditLogger" class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+
+    <bean id="bitMaskingPermissionGrantingStrategy"
+          class="com.acuity.va.security.acl.permissions.BitMaskingPermissionGrantingStrategy">
+        <constructor-arg ref="consoleAuditLogger"/>
+    </bean>
+
+    <bean id="aclAuthzStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+        <constructor-arg ref="adminAuthority"/>
+    </bean>
+
+    <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+        <constructor-arg ref="aclEhCacheFactoryBean"/>
+    </bean>
+
+    <bean id="aclEhCacheFactoryBean" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager" ref="ehcache"/>
+        <!--Set in the spring-cache.xml -->
+        <property name="cacheName" value="aclCache"/>
+    </bean>
+
+    <!--
+       Need for only users of role ACL_ADMINISTRATOR can add and remove Acls
+    -->
+    <bean id="adminAuthority" class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+        <constructor-arg value="ACL_ADMINISTRATOR"/>
+    </bean>
+
+    <beans profile="default, local-auth">
+        <context:component-scan
+                base-package="com.acuity.va.security.acl, com.acuity.va.security.common.service">
+        </context:component-scan>
+    </beans>
+
+    <beans profile="remote-auth, dummy-auth">
+        <context:component-scan base-package="com.acuity.va.security.acl.service, com.acuity.va.security.common.service">
+            <context:include-filter type="regex" expression=".*AcuitySecurityResourceHttpClient" />
+            <context:include-filter type="regex" expression=".*RemotePreAuthenticatedAuthenticationProvider" />
+            <context:exclude-filter type="regex" expression="com.acuity.va.security.acl.service.*AclService" />
+            <context:exclude-filter type="regex" expression="com.acuity.va.security.acl.service.*serService" />
+            <context:exclude-filter type="regex" expression="com.acuity.va.security.acl.service.*eopleResourceClient" />
+            <context:exclude-filter type="regex" expression="com.acuity.va.security.acl.service.*ustomUserDetailsManager" />
+            <context:exclude-filter type="regex" expression="com.acuity.va.security.acl.service.VASecurityResourceClient" />
+            <context:exclude-filter type="regex" expression="com.acuity.va.security.acl.service.VASecurityResourceFactory" />
+        </context:component-scan>
+    </beans>
+
+    <beans profile="default">
+        <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+            <constructor-arg ref="dataSource"/>
+            <constructor-arg ref="lookupStrategy"/>
+            <constructor-arg ref="aclCache"/>
+        </bean>
+    </beans>
+
+    <beans profile="postgres-mode">
+    
+        <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+            <constructor-arg ref="dataSource"/>
+            <constructor-arg ref="lookupStrategy"/>
+            <constructor-arg ref="aclCache"/>
+            <property name="sidIdentityQuery">
+                <value>SELECT max(id) FROM ACL_SID</value>
+            </property>
+            <property name="classIdentityQuery">
+                <value>SELECT max(id) FROM ACL_CLASS</value>
+            </property>
+        </bean>
+    </beans>
+
+    <!-- Overidden permissionEvaluator too add hasPermission methods -->
+    <beans profile="default,local-auth">
+        <bean id="pe" class="com.acuity.va.security.acl.permissions.AcuityAclPermissionEvaluator">
+            <constructor-arg ref="aclService"/>
+            <property name="permissionFactory" ref="permissionFactory"/>
+        </bean>
+    </beans>
+    
+    <beans profile="remote-auth">
+        <bean id="pe" class="com.acuity.va.security.acl.permissions.AcuityRemoteAclPermissionEvaluator">
+            <property name="permissionFactory" ref="permissionFactory"/>
+            <property name="acuitySecurityResourceClient" ref="acuitySecurityResourceClient"/>
+        </bean>
+    </beans>
+
+</beans>

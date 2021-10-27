@@ -1,0 +1,173 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="container">
+    <div class="analytics">
+        <div class="panel-body">
+            <div ng-show="MODEL.loading" class="analytics-loader">
+                <img src="images/loader.gif">
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h1>
+                        <span class="glyphicon glyphicon-stats"></span> User Access
+                    </h1>
+                </div>
+                <div class="col-md-8">
+                    <div>
+                        <h3>
+                            <a href="/portal/portal" class="pull-right">
+                                <img src="images/acuity-logo.png" width="150">
+                            </a>
+                            &nbsp;
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12" style="display: block;">
+                    <h4> Search </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <!--<div class="row">-->
+                    <!--<div class="col-md-12">-->
+                    <label>
+                        Show users by:
+                    </label>
+                    <select ng-model="MODEL.searchUsersTerm.showBy" class="form-control">
+                        <option value="name">
+                            Name
+                        </option>
+                        <option value="nameAndId">
+                            Name and User ID
+                        </option>
+                        <option value="userId">
+                            User ID
+                        </option>
+                    </select>
+                    <!--</div>-->
+                    <!--<div class="col-md-12">-->
+                </div>
+                <div class="col-md-6">
+
+                    <label>
+                        Search datasets
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter search term"
+                           id="searchInstancesInput"
+                           ng-model="MODEL.searchInstanceTerm"
+                           ng-change="filterAclBySearchTerm()">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        Search users:
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter search term"
+                           id="searchUsersInput"
+                           ng-model="MODEL.searchUsersTerm.name">
+                </div>
+                <div class="col-md-6 mt30">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="MODEL.access.permitted" ng-change="filterAclBySearchTerm()">Base package access
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="MODEL.access.denied" ng-change="filterAclBySearchTerm()">No access
+                    </label>
+                </div>
+            </div>
+
+            <p>
+                &nbsp;
+            </p>
+
+            <div class="row">
+                <div class="col-md-6">                 
+                    <label>
+                        ACUITY Users (select):
+                    </label>
+                    <ul class="list-group list-group-scroll list-group-scroll-trainedUsers">
+                        <li class="list-group-item"
+                            ng-click="selectUser(user)"
+                            ng-class="{'active' : selectedUser.userId == user.userId}"
+                            ng-repeat="user in filteredAllUsers = (MODEL.trainedUsers| filterBySearchTerm:MODEL.searchUsersTerm | orderBy:'name')">
+                            <span>
+                                {{user| personDisplayName:MODEL.searchUsersTerm.showBy}}
+                            </span>
+                        </li>
+                        <li ng-hide="filteredAllUsers.length" class="list-group-item">
+                            Empty (filtered)
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+
+                    <p ng-show="selectedUser && !MODEL.aclsByStudyandDrugProgramme">
+                        No datasets available
+                    </p>
+
+                    <p ng-show="!selectedUser">
+                        No user selected
+                    </p>
+
+                    <div class="list-group-scroll-datasets list-group-scroll">
+                        <div ng-repeat="(drugProgramme,studies) in MODEL.filteredAcls | orderBy:'drugProgramme'">
+                            <h4>
+                                {{drugProgramme}}
+                            </h4>
+
+                            <div ng-repeat="(study,datasets) in studies | orderBy:'study'">
+                                <label>
+                                    {{study}}
+                                </label>
+                                <ul class="list-group">
+                                    <li class="list-group-item"
+                                        ng-repeat="dataset in datasets| orderBy:'datasetName'">
+                                        <div class="row">
+                                            <div class="col-md-11 overflow-x-hidden" title="View Permission: {{ dataset.viewPermission}}, Role Permission: {{ dataset.rolePermission}}">
+                                                {{dataset.datasetName}}
+                                                <div class="pull-right">
+                                                    <span style="color:gray">
+                                                        View: {{ dataset.viewPermission}}, Role: {{ getRoleFromMask(dataset.rolePermission) }}
+                                                    </span>     
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 pull-right">                                                                                       
+                                                <span ng-if="dataset.hasPermission"
+                                                      style="color:green"
+                                                      class="glyphicon glyphicon-ok-circle">
+                                                </span>                                            
+                                                <span ng-if="!dataset.hasPermission"
+                                                      style="color:red"
+                                                      class="glyphicon glyphicon-ban-circle">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

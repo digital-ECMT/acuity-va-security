@@ -1,0 +1,1304 @@
+/*
+ * Copyright 2021 The University of Manchester
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Helpers */
+.input-xs {
+    height: 22px;
+    padding: 5px 5px;
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 3px;
+}
+
+.ml0 {
+    margin-left: 0;
+}
+
+.mr30 {
+    margin-right: 30px;
+}
+
+.ml15 {
+    margin-left: 15px;
+}
+
+.mt33 {
+    margin-top: 33px;
+}
+
+.mt30 {
+    margin-top: 35px;
+}
+
+.mt3 {
+    margin-top: 3px;
+}
+
+.mt35 {
+    margin-top: 35px;
+}
+
+.mb15 {
+    margin-bottom: 15px;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+
+.mt26 {
+    margin-top: 26px;
+}
+
+.min-w700 {
+    min-width: 700px;
+}
+
+.clear {
+    clear: both;
+}
+
+.font-size-11 {
+    font-size: 11px;
+}
+
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
+
+.panel-group .panel + .panel {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* Bootstrap UI for Angular fixes */
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+.content {
+    margin: 25px auto;
+}
+
+.filter-patients .gridStyle {
+    border: 1px solid rgb(212, 212, 212);
+    height: 600px;
+}
+
+.gridHeight300 .gridStyle {
+    height: 300px;
+}
+
+.h221 {
+    max-height: 221px;
+    overflow-y: auto;
+}
+
+.panel-header {
+    text-align: center;
+    font-weight: bold;
+}
+
+.analytics .panel-body {
+    position: relative;
+    min-height: 100px;
+}
+
+.analytics-loader {
+    text-align: center;
+    position: absolute;
+    margin-left: -15px;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    height: 99%;
+    min-height: 50px;
+    z-index: 1;
+}
+
+.analytics-loader img {
+    margin-top: 50px;
+}
+
+.loader-middle {
+    text-align: center;
+    position: absolute;
+    margin-left: -15px;
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    height: 99%;
+    min-height: 50px;
+    z-index: 1;
+}
+
+.loader-middle img {
+    margin-top: 50px;
+}
+
+.chart-slider .ngrs-value {
+    display: none;
+}
+
+.chart-slider.ngrs-range-slider {
+    margin-bottom: 0px;
+}
+
+.ngrs-range-slider.ngrs-vertical.ngrs-left.ml15 {
+    margin-left: 15px;
+}
+
+.chart-slider.ngrs-range-slider.ngrs-vertical .ngrs-runner {
+    height: 233px;
+}
+
+.vert-slider-label {
+    display: inline-block;
+    width: 200px;
+    height: 25px;
+    overflow: hidden;
+}
+
+.gridStyle2 {
+    border: 1px solid rgb(212, 212, 212);
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 200px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+/*For drag and drop for edit users*/
+.on-drag-enter {
+    background-color: lightgray;
+}
+
+.dataowner-on-drag-hover:before {
+    content: 'Drop to add/replace a data owner';
+    display: block;
+    color: grey;
+    font-size: x-large;
+    background-color: lightgray;
+    font-weight: 600;
+}
+
+.authorisers-on-drag-hover:before {
+    content: 'Drop to add to authorisers';
+    display: block;
+    color: grey;
+    font-size: x-large;
+    background-color: lightgray;
+    font-weight: 600;
+}
+
+.administrators-on-drag-hover:before {
+    content: 'Drop to add to administrators';
+    display: block;
+    color: grey;
+    font-size: x-large;
+    background-color: lightgray;
+    font-weight: 600;
+}
+
+.authorisedUsers-on-drag-hover:before {
+    content: 'Drop to add to authorised users';
+    display: block;
+    color: grey;
+    background-color: lightgray;
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.authorisedUsersScheduled-on-drag-hover {
+    cursor: move;
+    font-size: 22px;
+}
+
+.users-on-drag-hover:before {
+    content: 'Drop to add to users';
+    display: block;
+    color: grey;
+    background-color: lightgray;
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.trainedUser-access-on-drag-hover:before {
+    content: 'Drop to remove from trained users';
+    display: block;
+    color: grey;
+    background-color: lightgray;
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.trainedUser-on-drag-hover:before {
+    content: 'Drop to add to trained users';
+    display: block;
+    color: grey;
+    background-color: lightgray;
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.developmentteam-on-drag-hover:before {
+    content: 'Drop to add to development team';
+    display: block;
+    color: grey;
+    background-color: lightgray;
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.none-draggable-item {
+    color: gray;
+}
+
+.green-hover-icon {
+    color: black;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.red-hover-icon {
+    color: black;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.green-hover-icon:hover {
+    color: green;
+}
+
+.red-hover-icon:hover {
+    color: red;
+}
+
+.grey-small-item {
+    color: gray;
+    font-size: x-small;
+}
+
+.green-small-item {
+    color: green;
+    font-size: x-small;
+}
+
+.red-small-item {
+    color: red;
+    font-size: x-small;
+}
+
+.red-item {
+    color: red;
+}
+
+.grey-item {
+    color: gray;
+}
+
+.strike-though {
+    text-decoration: line-through;
+}
+
+/*End of drag and drop*/
+
+/* Ng Switch animation */
+.animate-switch-container {
+    position: relative;
+    background: white;
+    overflow: hidden;
+}
+
+.animate-switch {
+    padding: 10px;
+}
+
+.animate-switch.ng-animate {
+    -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
+    transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.animate-switch.ng-leave.ng-leave-active,
+.animate-switch.ng-enter {
+    top: -50px;
+}
+
+.animate-switch.ng-leave,
+.animate-switch.ng-enter.ng-enter-active {
+    top: 0;
+}
+
+/* End of Ng Switch animation */
+
+/* Edit Users scrollbar */
+.list-group-scroll {
+    overflow-y: auto;
+}
+
+.list-group-scroll-dataOwner {
+    max-height: 84px;
+    padding-bottom: 2px;
+}
+
+.list-group-scroll-authorisers {
+    max-height: 84px;
+    padding-bottom: 2px;
+}
+
+.list-group-scroll-administrator {
+    max-height: 84px;
+    padding-bottom: 2px;
+}
+
+.list-group-scroll-authorisedUsers {
+    max-height: 166px;
+    padding-bottom: 2px;
+}
+
+.list-group-scroll-trainedUsers {
+    max-height: 575px;
+    padding-bottom: 2px;
+}
+
+.list-group-scroll-datasets {
+    max-height: 575px;
+    padding-bottom: 2px;
+    overflow-x: hidden;
+    margin-top: 25px;
+}
+
+.list-group-scroll-searchUsers {
+    max-height: 450px;
+    padding-bottom: 2px;
+}
+
+/* End of Edit Users */
+
+/* MyAnalitics Visualization Grid */
+
+.analitics-grid-block {
+    float: left;
+    width: 330px;
+    height: 100px;
+}
+
+.analitics-grid-block img {
+    width: 52px;
+    float: left;
+}
+
+.analitics-grid-block-text {
+    max-width: 250px;
+    overflow-x: hidden;
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+    text-overflow: ellipsis;
+}
+
+/* Link (a) to a dataset  */
+a.vis:link {
+    color: black;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.vis {
+    color: black;
+}
+
+a.vis:hover {
+    color: #003399; /*blue*/
+    background-color: #def;
+}
+
+/* Link (a) to a dataset  */
+/* End MyAnalitics Visualization Grid */
+
+.table-loaded-wrap {
+    position: relative;
+    min-height: 100px;
+}
+
+.table-loader {
+    text-align: center;
+    position: absolute;
+    margin-left: -15px;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    height: 99%;
+    min-height: 50px;
+    z-index: 1;
+}
+
+.table-loader img {
+    margin-top: 50px;
+}
+
+.table-discontinuation thead tr th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* ae-subject-table */
+.ae-subject-table {
+    height: 100%;
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.ae-subject-table > .panel-body {
+    padding: 0 1px 0 0;
+    position: absolute;
+    top: 37px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.ae-subject-table > .panel-body > .wrapper {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+.ae-subject-table .panel-heading {
+    padding: 3px 5px;
+    border-radius: 0;
+}
+
+.ae-subject-table .table td,
+.ae-subject-table div,
+.ae-subject-table h5,
+.ae-subject-table .badge {
+    font-size: 10px;
+}
+
+.ae-subject-table h5 {
+    margin: 2px;
+    margin-left: 6px;
+}
+
+.ae-subject-table .btn-xs {
+    font-size: 11px;
+}
+
+.ae-subject-table .table th {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.ae-subject-table .table th a {
+    font-size: 11px;
+    color: #000000;
+    line-height: 1;
+}
+
+.ae-subject-table .table > tbody > tr > td {
+    /*removed to avoid silly cases in study names and subject Enrolment numbers.
+
+    use class below on desired elements instead.*/
+    /*text-transform: lowercase;*/
+}
+
+.ae-subject-table-normalcase {
+    text-transform: none;
+}
+
+.ae-subject-table-lowercase {
+    text-transform: lowercase;
+}
+
+.ae-subject-table-uppercase {
+    text-transform: uppercase;
+}
+
+.ae-subject-table .table > tbody > tr.active > td {
+    background-color: #a6cee3;
+    color: #FFF;
+}
+
+.ae-subject-table .table > tbody > tr.secondarySubject1 > td {
+    background-color: red;
+    color: #FFF;
+}
+
+.ae-subject-table .table > tbody > tr.secondarySubject2 > td {
+    background-color: red;
+    color: #FFF;
+}
+
+.ae-subject-table .table > tbody > tr.secondarySubject3 > td {
+    background-color: red;
+    color: #FFF;
+}
+
+.ae-subject-table .table > tbody > tr.secondarySubject4 > td {
+    background-color: red;
+    color: #FFF;
+}
+
+.ae-subject-table .table > tbody > tr.secondarySubject5 > td {
+    background-color: red;
+    color: #FFF;
+}
+
+.ae-subject-table .table-hover > tbody > tr.bg-info:hover > td {
+    background-color: #d9edf7;
+}
+
+.table caption {
+    font-weight: bold;
+    text-align: left;
+}
+
+/* ae page */
+.content {
+    margin: 0 auto;
+}
+
+.bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.bottom-collapsed > .bottom-bar {
+    height: 50px;
+}
+
+.page-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 250px;
+    top: 51px;
+}
+
+.page-content.sidebar-collapsed {
+
+}
+
+.page-body {
+    position: absolute;
+    bottom: 250px;
+    left: 0;
+    right: 0;
+    top: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #F4F4F4;
+    border: solid 1px #CCC;
+    padding: 10px;
+}
+
+.bottom-collapsed > .page-body {
+    bottom: 50px;
+}
+
+.sidebar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: 51px;
+    width: 250px;
+    border: solid 1px #CCC;
+    /*padding: 20px 0 0 0;*/
+}
+
+.sidebar-content {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-left: 35px;
+}
+
+.sidebar-bookmarks > .nav > li > a.sidebar-close {
+    padding: 3px 8px;
+}
+
+.sidebar-content-panel {
+    padding: 0 20px 20px 20px;
+}
+
+.sidebar-bookmarks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    border-right: none;
+    width: 35px;
+    z-index: 2;
+}
+
+.sidebar-bookmarks > .nav-tabs {
+    float: left;
+    margin-right: 19px;
+    border-right: 1px solid #ddd;
+    height: 100%;
+    margin-left: 3px;
+    background-color: #fff;
+}
+
+.sidebar-bookmarks > .nav-tabs > li {
+    margin-bottom: 0;
+    background-color: white;
+}
+
+.sidebar-bookmarks > .nav-tabs > li > a {
+    margin-right: -1px;
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+}
+
+.sidebar-bookmarks > .nav-tabs > li > a:hover,
+.sidebar-bookmarks > .nav-tabs > li > a:focus {
+    border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.sidebar-bookmarks > .nav-tabs .active > a,
+.sidebar-bookmarks > .nav-tabs .active > a:hover,
+.sidebar-bookmarks > .nav-tabs .active > a:focus {
+    border-color: #ddd transparent #ddd #ddd;
+    border-right-color: #ffffff;
+}
+
+.sidebar-help > div {
+    display: none;
+}
+
+.sidebar-help > div.active {
+    display: block;
+}
+
+.icons-bookmark-ae {
+    width: 25px;
+    display: block;
+    background: url("../images/vertical-bookmarks.png") 0 0 no-repeat;
+}
+
+.icons-bookmark-ae.navigation {
+    height: 85px;
+    background-position: 5px -395px;
+}
+
+.icons-bookmark-ae.tools {
+    height: 55px;
+    background-position: 5px -595px
+}
+
+.icons-bookmark-ae.ae-filter {
+    height: 80px;
+    background-position: 5px 5px;
+}
+
+.icons-bookmark-ae.pop-filter {
+    height: 130px;
+    background-position: 5px -195px;
+}
+
+.icons-bookmark-ae.lab-filter {
+    height: 84px;
+    background-position: -20px -395px;
+}
+
+.icons-bookmark-ae.dose-filter {
+    height: 90px;
+    background-position: -20px -595px;
+}
+
+.icons-bookmark-ae.liver-filter {
+    height: 91px;
+    background-position: -20px -195px;
+}
+
+.icons-bookmark-ae.renal-filter {
+    height: 102px;
+    background-position: -45px -195px;
+}
+
+.icons-bookmark-ae.lvef-filter {
+    height: 95px;
+    background-position: -45px 5px;
+}
+
+.icons-bookmark-ae.vitals-filter {
+    height: 95px;
+    background-position: -45px -395px;
+}
+
+.icons-bookmark-ae.qtcf-filter {
+    height: 97px;
+    background-position: -20px 5px;
+}
+
+.icons-bookmark-ae.conmeds-filter {
+    height: 120px;
+    background-position: -70px 5px;
+}
+
+.icons-bookmark-ae.help {
+    height: 50px;
+    background-position: -70px -395px;
+}
+
+.split-handler {
+    background-color: #a7a7a7;
+    position: absolute;
+    z-index: 999;
+}
+
+/* Horizontal */
+
+.split-handler.horizontal {
+    width: 8px;
+    top: 51px;
+    bottom: 0;
+    cursor: ew-resize;
+    background: #E4E4E4 url("/images/splitter-v.png") no-repeat center;
+}
+
+.nav-smooth-scroll > li > a.active {
+    background: #eee;
+}
+
+/* Vertical */
+
+.split-handler.vertical {
+    height: 8px;
+    left: 0;
+    right: 0;
+    cursor: ns-resize;
+    background: #E4E4E4 url("/images/splitter-h.png") no-repeat center;
+}
+
+.chart {
+    -webkit-user-select: none;
+    position: relative;
+    /*padding: 0px 20px;*/
+}
+
+.safety-population-title {
+    /*margin-bottom: -25px;*/
+    margin-top: -5px;
+}
+
+.safety-page-section {
+    margin-bottom: 10px;
+    border: solid 1px #CCC;
+    background-color: #FFF;
+    padding: 10px;
+}
+
+.safety-page-section.lab-subject {
+    margin-bottom: 120px;
+}
+
+.safety-page-section.lvef-subject {
+    margin-bottom: 160px;
+}
+
+.safety-page-section.vitals-subject {
+    margin-bottom: 190px;
+}
+
+.safety-page-section.qtcf-subject {
+    margin-bottom: 180px;
+}
+
+.safety-page-section.conmeds-subject {
+    margin-bottom: 150px;
+}
+
+.safety-page-section.liver-subject {
+    margin-bottom: 235px;
+}
+
+.link-disabled {
+    color: gray;
+    text-decoration: none;
+}
+
+.link-disabled:hover {
+    color: gray;
+    text-decoration: none;
+}
+
+.trbl-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.75) url("../images/loader.gif") center no-repeat;
+
+    /* set this absurdly high to ensure it's always on top */
+    z-index: 999999;
+}
+
+.trbl-nodatatodisplay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    color: #999;
+}
+
+.trbl-nodatatodisplay:after {
+    position: absolute;
+    content: "No data to display";
+    font-size: 40px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+}
+
+/* subject-finder*/
+.subject-finder .dropdown-menu {
+    height: 135px;
+    overflow-y: auto;
+}
+
+.subject-finder .loader {
+    position: absolute;
+    top: 3px;
+    right: 38px;
+}
+
+.inner-addon {
+    position: relative;
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+}
+
+/* align icon */
+.right-addon .glyphicon {
+    right: 0px;
+}
+
+/* add padding  */
+.right-addon input {
+    padding-right: 30px;
+}
+
+.table-small-text th, .table-small-text td {
+    font-size: 9px;
+}
+
+/*used in about page*/
+.spaced-row {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.spaced-row-final {
+    margin-top: 30px;
+    margin-bottom: 200px;
+}
+
+/*used in views/about_gettingStarted.html to align buttons.*/
+/*Forces height of div so that all buttons are aligned in the getting started section*/
+/*bootstrap 3 default is xs screen*/
+.forced-height {
+    height: 185px;
+}
+
+.absolute-bottom {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .forced-height {
+        height: 185px;
+    }
+
+    .col-sm-15 {
+        width: 20%;
+        float: left;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .forced-height {
+        height: 200px;
+    }
+
+    .col-md-15 {
+        width: 20%;
+        float: left;
+    }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .forced-height {
+        height: 185px;
+    }
+
+    .col-lg-15 {
+        width: 20%;
+        float: left;
+    }
+}
+
+.news-date {
+    color: #949494;
+}
+
+.text-red {
+    color: red;
+}
+
+.text-red-bold {
+    color: red;
+    font-weight: bold;
+}
+
+/*  Link buttons word wrap */
+.btn-link-wrap {
+    white-space: normal !important;
+    max-width: 500px;
+    margin-bottom: 0px;
+    word-wrap: break-word;
+    padding-bottom: 0px;
+    padding-top: 2px;
+}
+
+.small-border {
+    padding: 15px;
+}
+
+.vseparator {
+    margin: 20px 0;
+}
+
+.centreAxisLabel {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+    float: none !important;
+}
+
+/* NgDialog widths*/
+.ngdialog.ngdialog-theme-default.custom-width .ngdialog-content {
+    width: 280px;
+}
+
+.ngdialog.ngdialog-theme-default.custom-medium-width .ngdialog-content {
+    width: 380px;
+}
+
+.ngdialog.ngdialog-theme-default.custom-large-width .ngdialog-content {
+    width: 550px;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-content {
+    width: 850px;
+}
+
+.theme-warning .ngdialog-content {
+    border: 4px solid #ffc000;
+}
+
+.warning-dialog-title {
+    margin: 0 -15px 0 -15px;
+    border-bottom: 3px solid #ffc000;
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+.warning-dialog-image {
+    margin-top: 20px;
+}
+
+.centered-pills {
+    text-align: center
+}
+
+.centered-pills ul.nav-pills {
+    display: inline-block
+}
+
+.centered-pills li {
+    display: inline
+}
+
+.centered-pills a {
+    float: left
+}
+
+* html .centered-pills ul.nav-pills, * + html .centered-pills ul.nav-pills {
+    display: inline
+}
+
+.report-table .table > tbody > tr.active > td {
+    background-color: #428bca;
+    color: #FFF;
+}
+
+.report-table .table-hover > tbody > tr.bg-info:hover > td {
+    background-color: #d9edf7;
+}
+
+.filter-content {
+    position: absolute;
+    top: 35px;
+    left: 55px;
+    right: 15px;
+    bottom: 0px;
+    overflow-y: scroll;
+}
+
+.app-modal-window .modal-dialog {
+    width: 400px;
+}
+
+/*.groupings-tab-content {*/
+/*border-left: 1px solid #ddd;*/
+/*border-right: 1px solid #ddd;*/
+/*border-bottom: 1px solid #ddd;*/
+/*padding: 5px;*/
+/*}*/
+
+fieldset.dosing-details {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+legend.dosing-details {
+    font-size: 15px;
+    text-align: left;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+}
+
+/*.spinner {*/
+/*width: 95px;*/
+/*}*/
+
+/*.spinner input {*/
+/*text-align: right;*/
+/*}*/
+
+.input-group-btn-vertical {
+    position: relative;
+    white-space: nowrap;
+    width: 1%;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.input-group-btn-vertical > .btn {
+    display: block;
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin-left: -1px;
+    position: relative;
+    border-radius: 0;
+}
+
+.input-group-btn-vertical > .btn:first-child {
+    border-top-right-radius: 4px;
+}
+
+.input-group-btn-vertical > .btn:last-child {
+    margin-top: -2px;
+    border-bottom-right-radius: 4px;
+}
+
+.input-group-btn-vertical > .btn:first-child > span {
+    position: absolute;
+    top: 0;
+    left: 2px;
+}
+
+.input-group-btn-vertical > .btn:last-child > span {
+    position: absolute;
+    top: 0;
+    left: 1px;
+}
+
+.list-overflow {
+    overflow-y: auto;
+    height: 250px
+}
+
+.ng-hide-animate.ng-hide {
+    display: none;
+}
+
+.form-control {
+    padding: 6px;
+}
+
+.filter-spinner {
+    position: relative;
+    margin: 0 0 1rem;
+    border: 1px solid #BBB;
+    border-color: #BBB #ECECEC #ECECEC #BBB;
+    padding: .2rem;
+}
+
+.filter-spinner::-webkit-outer-spin-button,
+.filter-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    background: #FFF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKUlEQVQYlWNgwAT/sYhhKPiPT+F/LJgEsHv37v+EMGkmkuImoh2NoQAANlcun/q4OoYAAAAASUVORK5CYII=) no-repeat center center;
+    width: 1em;
+    border-left: 1px solid #BBB;
+    opacity: .5; /* shows Spin Buttons per default (Chrome >= 39) */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.filter-spinner::-webkit-inner-spin-button:hover,
+.filter-spinner::-webkit-inner-spin-button:active {
+    box-shadow: 0 0 2px #0CF;
+    opacity: .8;
+}
+
+.range-filter-input {
+    width: 60px;
+    margin-top: -25px;
+    height: 20px;
+    font-size: 12px;
+}
+
+.non-marked-list {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.non-marked-list li {
+    list-style-type: none;
+}
+
+.grouping-drugs .grouping-drug {
+    position: relative;
+    padding: 3px 25px 3px 3px;
+}
+
+.grouping-drugs .grouping-drug.active input[readonly] {
+    background-color: #337ab7;
+    color: #ffffff;
+}
+
+.grouping-drugs .grouping-drug input[readonly] {
+    border: none;
+    background-color: #ffffff;
+    box-shadow: none;
+}
+
+.grouping-drugs .grouping-drug input[readonly] {
+    border: none;
+    background-color: #ffffff;
+    box-shadow: none;
+}
+
+.home-thumbnail {
+    background-color: rgb(238, 238, 238);
+    color: black;
+}
+
+.home-thumbnail:hover {
+    color: gray;
+    text-decoration: none;
+}
+
+.home-thumbnail span {
+    margin-top: 25px;
+    text-align: center;
+    display: block;
+    font-size: 75px;
+}
+
+.home-thumbnail p {
+    text-align: center;
+    font-size: 28px;
+    margin-top: 15px;
+}
+
+div.tooltip-inner {
+    max-width: 400px;
+    font-size: 14px;
+}
+
+.col-xs-15,
+.col-sm-15,
+.col-md-15,
+.col-lg-15 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.col-xs-15 {
+    width: 20%;
+    float: left;
+}
+
+.dashboard-table td {
+    min-width: 75px;
+}
+
+.dashboard-dropdown {
+    background-color: #FFF;
+    color: black !important;
+    text-decoration: none;
+}
+
+.dashboard-subject-label {
+    font-size: 11px !important;
+}

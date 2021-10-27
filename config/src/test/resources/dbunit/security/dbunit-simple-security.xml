@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<dataset>
+    <ACL_SID ID="20" PRINCIPAL="true" SID="User1"/>
+    <ACL_SID ID="21" PRINCIPAL="true" SID="User2"/>
+    <ACL_SID ID="22" PRINCIPAL="true" SID="User3"/>
+    
+    <ACL_REMOTE ID="1" NAME="acuity" BASE_URL="http://localhost:9090/resources/acuity/infomation" ENABLED="true" />
+        
+    <ACL_CLASS ID="10" CLASS="com.acuity.va.security.acl.domain.DrugProgramme" ACL_REMOTE_ID="1"/>
+    
+    <ACL_OBJECT_IDENTITY ID="30" OBJECT_ID_CLASS="10" OBJECT_ID_IDENTITY="2" PARENT_OBJECT="[NULL]" OWNER_SID="20" ENTRIES_INHERITING="false"/>
+    <ACL_OBJECT_IDENTITY ID="31" OBJECT_ID_CLASS="10" OBJECT_ID_IDENTITY="3" PARENT_OBJECT="[NULL]" OWNER_SID="20" ENTRIES_INHERITING="false"/>
+    
+    <ACL_OBJECT ID="100" NAME="STUDY0006" ACL_TYPE="DP" ACL_OBJECT_IDENTITY_ID="30" MODULE_TYPE="[NULL]" DEFAULT_VIS="[NULL]" PARENT_CLINICAL_STUDY="[NULL]" PARENT_CLINICAL_STUDY_CODE="[NULL]" PARENT_DRUG_PROGRAMME="[NULL]"/>
+    <ACL_OBJECT ID="101" NAME="STUDY0007" ACL_TYPE="DP" ACL_OBJECT_IDENTITY_ID="31" MODULE_TYPE="[NULL]" DEFAULT_VIS="[NULL]" PARENT_CLINICAL_STUDY="[NULL]" PARENT_CLINICAL_STUDY_CODE="[NULL]" PARENT_DRUG_PROGRAMME="[NULL]"/>
+        
+    <ACL_ENTRY ID="1" ACL_OBJECT_IDENTITY="30" ACE_ORDER="1" SID="20" MASK="522240" GRANTING="true" AUDIT_SUCCESS="true" AUDIT_FAILURE="true"/>
+    <ACL_ENTRY ID="2" ACL_OBJECT_IDENTITY="30" ACE_ORDER="2" SID="21" MASK="3" GRANTING="true" AUDIT_SUCCESS="true" AUDIT_FAILURE="true"/>
+    <ACL_ENTRY ID="3" ACL_OBJECT_IDENTITY="31" ACE_ORDER="1" SID="21" MASK="3" GRANTING="true" AUDIT_SUCCESS="true" AUDIT_FAILURE="true"/>
+
+    <USERS USERNAME="User1" FULLNAME="Glen D" PASSWORD="password" ENABLED="1" LINKED_USERNAME="[NULL]"/>
+    <USERS USERNAME="User2" FULLNAME="Bob D" PASSWORD="password" ENABLED="1" LINKED_USERNAME="[NULL]"/>
+    <USERS USERNAME="User3" FULLNAME="Steve D" PASSWORD="password" ENABLED="1" LINKED_USERNAME="[NULL]"/>
+    <GROUPS ID="1" GROUP_NAME="DEVELOPMENT_GROUP"/>
+    <GROUPS ID="2" GROUP_NAME="ACL_ADMINISTRATOR_GROUP"/>
+    <GROUPS ID="3" GROUP_NAME="TRAINED_USER_GROUP"/>
+    <GROUP_AUTHORITIES GROUP_ID="1" AUTHORITY="DEVELOPMENT_TEAM"/>
+    <GROUP_AUTHORITIES GROUP_ID="2" AUTHORITY="ACL_ADMINISTRATOR"/>
+    <GROUP_AUTHORITIES GROUP_ID="3" AUTHORITY="TRAINED_USER"/>
+    <GROUP_MEMBERS ID="1" USERNAME="User1" GROUP_ID="1"/>
+    <GROUP_MEMBERS ID="2" USERNAME="User1" GROUP_ID="2"/>
+    <GROUP_MEMBERS ID="3" USERNAME="User2" GROUP_ID="3"/>
+    <GROUP_MEMBERS ID="4" USERNAME="User3" GROUP_ID="3"/>
+</dataset>

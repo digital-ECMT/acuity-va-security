@@ -1,0 +1,113 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+        </div>
+        <div class="form-group">
+        </div>  
+        <div>
+            <div>
+                <label>
+                    Search for New User:
+                </label>                
+                <input type="text" class="form-control" placeholder="Enter name or email" id="searchUsersInput" 
+                       ng-model="MODEL.newUsersTerm.name"/>
+            </div>
+            <div ng-show="MODEL.newUsersTerm.name.indexOf('@') > - 1">
+                <div>&nbsp;</div>
+                <div>
+                    <label >
+                        New User Full Name:
+                    </label> 
+                    <input type="text" class="form-control" placeholder="Enter full user name" id="searchUsersFullName" 
+                           ng-model="MODEL.newUsersFullName.name" ng-show="MODEL.newUsersTerm.name.indexOf('@') > - 1"/>
+                </div>
+                <div>&nbsp;</div>
+            </div>
+            <div>
+                <a id="newUserAddButton" 
+                   class="btn btn-default pull-right ng-hide" 
+                   ng-click="onClickAddUserToTrainedUsers(MODEL.newUsersTerm.name,
+                               MODEL.newUsersFullName.name,
+                               MODEL.users.allTrainedUsers)" 
+                   ng-show="MODEL.newUsersTerm.name.length > 0 &&
+                               MODEL.newUsersFullName.name.length > 0 &&
+                               MODEL.newUsersTerm.name.indexOf('@') > - 1">
+                    <span class="glyphicon"></span>Add</a>
+            </div>
+        </div>
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+        <label>
+            New Users (drag and drop):
+        </label>
+        <!-- See http://plnkr.co/edit/5RLvCpDPoRcEk6u77dBM?p=info for simple example of drag and drop -->
+        <ul class="list-group list-group-scroll list-group-scroll-searchUsers">
+
+            <li class="list-group-item"
+                drag-channel="usersChannel" ui-draggable="{{ !(isCurrentUser(user) || isAlreadyInTrainedUserList(user)) }}" drag="user"
+                ng-repeat="user in filteredNewUsers = (MODEL.users.newUsers | filterBySearchTerm:MODEL.searchUsersTerm | orderBy:'name')">
+                <span ng-class="{'none-draggable-item': isCurrentUser(user) || isAlreadyInTrainedUserList(user) }">                
+                    {{ user | personDisplayName:MODEL.searchUsersTerm.showBy }}
+                </span>  
+            </li>
+
+            <li ng-hide="filteredNewUsers.length" class="list-group-item none-draggable-item"
+                drag-channel="usersChannel" ui-draggable="false" drag="user">
+                Empty (filtered)
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+        </div>
+        <label>
+            All Trained Users:
+        </label>
+        <ul ui-on-Drop="onDropAddUserToTrainedUsers($data, MODEL.users.allTrainedUsers)"
+            drop-channel="usersChannel"
+            drag-hover-class="trainedUser-on-drag-hover" class="list-group list-group-scroll list-group-scroll-trainedUsers">
+
+            <li class="list-group-item"
+                ng-repeat="user in filteredAllUsers = (MODEL.users.allTrainedUsers| filterBySearchTerm:MODEL.searchUsersTerm | orderBy:'name')"
+                on-drop-success="dropSuccessHandler(user, MODEL.users.allTrainedUsers)"
+                ui-draggable="false" drag="user">
+
+                <span ng-class="{'none-draggable-item': isCurrentUser(user) || user.isLinked() }">                
+                    {{ user | personDisplayName:MODEL.searchUsersTerm.showBy }}                                         
+                </span> 
+                <span ng-show="user.isLinked()" 
+                      title="User {{ user | personDisplayName:MODEL.searchUsersTerm.showBy }} will be logged on with permissions of {{ user.linkedPerson | personDisplayName:MODEL.searchUsersTerm.showBy }}">                
+                    <font color="#0074c7"> &nbsp;&nbsp;--> {{ user.linkedPerson | personDisplayName:MODEL.searchUsersTerm.showBy }}</font>                       
+                    <button style="color:0074c7" ng-click="unlink(user)" title="Delete link" type="button" class="glyphicon glyphicon-remove btn-link" />
+                </span>    
+                <div class="pull-right">
+                    <button style="color:black" ng-show="!user.isLinked()" title="Link to another user" type="button" class="glyphicon glyphicon-link btn-link" 
+                            ng-click="openLinkUserDialog(user)" />                        
+
+                    <button style="color:black" title="Remove as trained user" type="button" class="glyphicon glyphicon-remove btn-link" 
+                            ng-click="onClickRemoveUserFromTrainedUsers(user, MODEL.users.allTrainedUsers)" />                        
+                </div>
+            </li>
+            <li ng-hide="filteredAllUsers.length" class="list-group-item none-draggable-item"
+                drag-channel="usersChannel" ui-draggable="false" drag="user">
+                Empty (filtered)
+            </li>            
+        </ul>
+    </div>
+</div>

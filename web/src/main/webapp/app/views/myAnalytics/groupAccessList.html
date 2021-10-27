@@ -1,0 +1,98 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="dropdown">
+            <label>            
+                Groups
+            </label>
+            &nbsp;&nbsp;
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                {{group.MODEL.groups.selectedGroup.groupName}} <span class="caret"></span> 
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li ng-repeat="gp in group.MODEL.groups.allGroups | orderBy:'groupName'"><a ng-click="group.selectGroupHandler(gp)">{{gp.groupName}}
+                        <span ng-show="gp === group.MODEL.groups.selectedGroup.groupName" class="glyphicon glyphicon-ok"></span></a></li>              
+            </ul>
+            
+            <button style="color:green" title="Add a group" type="button" class="glyphicon glyphicon-plus btn-link" 
+                             ng-bootbox-prompt="Please type in the new group name" ng-bootbox-prompt-action="group.addGroup(result)" />        
+            <button ng-show="group.isCurrentGroupDeletable()" style="color:red"
+                    title="Delete {{group.MODEL.groups.selectedGroup.groupName}} group" type="button" class="glyphicon glyphicon-minus btn-link" 
+                            ng-click="group.deleteCurrentGroup()" />        
+            
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+        </div>
+        <div class="form-group">
+        </div>
+        <label>            
+            ACUITY Users (drag and drop):
+        </label>
+        <!--See http://plnkr .co/edit/5RLvCpDPoRcEk6u77dBM?p=info for simple example of drag and drop--> 
+        <ul class="list-group list-group-scroll list-group-scroll-trainedUsers">
+
+            <li class="list-group-item"                
+                drag-channel="usersChannel" ui-draggable="{{ !group.isCurrentUser(user)}}" drag="user"
+                ng-repeat="user in filteredAllUsers = (group.MODEL.users.trainedUsers| filterBySearchTerm:group.MODEL.searchUsersTerm | orderBy:'name')">
+
+                <span ng-class="{'none-draggable-item': group.isCurrentUser(user) }">
+                    {{ user | personDisplayName:group.MODEL.searchUsersTerm.showBy }}
+                </span>
+            </li>
+
+            <li ng-hide="group.filteredAllUsers.length" class="list-group-item none-draggable-item"
+                drag-channel="usersChannel" ui-draggable="false" drag="user">
+                Empty (filtered)
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6" ng-show="!group.MODEL.groups.isEmpty">
+        <div class="form-group">
+        </div>
+        <label>
+            {{group.MODEL.groups.selectedGroup.groupName}}:
+        </label>
+        <ul ui-on-Drop="group.onDropAddUserToSelectedGroup($data, group.MODEL.users.groupUsers, group.MODEL.users.trainedUsers)"
+            drop-channel="usersChannel"
+            drag-hover-class="developmentteam-on-drag-hover" class="list-group list-group-scroll list-group-scroll-trainedUsers">
+            <li class="list-group-item"
+                ng-repeat="groupUser in filteredGroupUsers = (group.MODEL.users.groupUsers | filterBySearchTerm:group.MODEL.searchUsersTerm | orderBy:'name')">
+                <span class='none-draggable-item'>
+                    {{ groupUser | personDisplayName:group.MODEL.searchUsersTerm.showBy }}
+                </span>
+                
+                <div class="pull-right">                   
+                    <button style="color:black" title="Remove from group" type="button" class="glyphicon glyphicon-remove btn-link" ng-show="!groupUser.isEmpty()"
+                            ng-click="group.onClickRemoveUserFromGroup(groupUser, group.MODEL.users.trainedUsers, group.MODEL.users.groupUsers)" />                        
+                </div>
+            </li>
+           <li ng-hide="filteredGroupUsers.length" class="list-group-item none-draggable-item"
+                drag-channel="developmentTeamChannel" ui-draggable="false" drag="developmentTeam">
+                Empty (filtered)
+            </li>
+        </ul>
+    </div>
+</div>

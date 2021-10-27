@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<configuration>
+
+    <!--
+    Sets up some variables:
+     DEV defines that should use console logger, not dev a file logger as its running on linux on none dev box
+    -->
+    <if condition='property("os.name").toLowerCase().contains("win")'>
+        <then>
+            <property name="DEV" value="true"/>
+        </then>
+    </if>
+
+    <!--
+      If its is dev env then use CONSOLE appender
+      Else then setup FILE appender, a daily rolling appender
+    -->
+    <if condition='isDefined("DEV")'>
+        <then>
+            <!-- Used in dev only -->
+            <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder>
+                    <pattern>%-23.-23(%d{HH:mm:ss} [%thread]) %-5level %-29.29(%logger{25}:%L) - %msg%n</pattern>
+                </encoder>
+            </appender>
+
+            <!-- Create default dev console root logger -->
+            <logger name="com.acuity" level="${root-level:-DEBUG}"/>
+            <logger name="org.springframework.aop.interceptor" level="TRACE"/>
+            <logger name="org.quartz" level="${root-level:-DEBUG}"/>
+            <logger name="net.sf.ehcache" level="INFO"/>
+            <logger name="java.sql" level="WARN"/>
+            <logger name="org.springframework.cache.ehcache" level="DEBUG"/>
+
+            <root level="WARN">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+        </then>
+        <else>
+            <!--
+              FILE is daily rolling appender, that rolls over every day keeping a max of 60 in history
+            -->
+            <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${LOG_PATH}/vasecurity/vasecurity.log</file>
+
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_PATH}/vasecurity/vasecurity-web.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+                    <maxHistory>15</maxHistory>
+                    <cleanHistoryOnStart>true</cleanHistoryOnStart>
+                </rollingPolicy>
+                
+                <encoder>
+                    <pattern>%-23.-23(%d{HH:mm:ss} [%thread]) %-5level %-29.29(%logger{25}:%L) - %msg%n</pattern>
+                </encoder>
+            </appender>
+
+            <appender name="FILE_TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${LOG_PATH}/vasecurity/vasecurity-web-trace.log</file>
+                <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                    <level>TRACE</level>
+                    <onMatch>ACCEPT</onMatch>
+                    <onMismatch>DENY</onMismatch>
+                </filter>
+
+                <!-- Support multiple-JVM writing to the same log file -->
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_PATH}/vasecurity/vasecurity-web-trace.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+                    <maxHistory>5</maxHistory>
+                    <cleanHistoryOnStart>true</cleanHistoryOnStart>
+                </rollingPolicy>
+                
+                <encoder>
+                    <pattern>%-23.-23(%d{HH:mm:ss} [%thread]) %-5level %-29.29(%logger{25}:%L) - %msg%n
+                    </pattern>
+                </encoder>
+            </appender>
+
+            <!-- Used for error only -->
+            <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+                <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                    <level>ERROR</level>
+                </filter>
+                <encoder>
+                    <pattern>%-23.-23(%d{HH:mm:ss} [%thread]) %-5level %-29.29(%logger{25}:%L) - %msg%n</pattern>
+                </encoder>
+            </appender>
+
+            <logger name="com.acuity" level="${root-level:-DEBUG}"/>
+            <logger name="org.springframework.aop.interceptor" level="TRACE"/>
+            <logger name="org.quartz" level="${root-level:-DEBUG}"/>
+            <logger name="net.sf.ehcache" level="INFO"/>
+            <logger name="java.sql" level="WARN"/>
+
+            <root level="WARN">
+                <appender-ref ref="FILE"/>
+                <appender-ref ref="FILE_TRACE"/>
+                <appender-ref ref="CONSOLE"/>
+            </root>
+
+        </else>
+    </if>
+
+</configuration>

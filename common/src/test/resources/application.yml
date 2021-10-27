@@ -1,0 +1,7 @@
+#Config for PeopleResourceClientITCase test
+azure:
+  client:
+    clientId:
+    clientSecret:
+  authorityUri:
+  graphUri: https://graph.microsoft.com

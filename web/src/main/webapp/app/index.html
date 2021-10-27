@@ -1,0 +1,148 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!doctype html>
+<html ng-app="acuityApp">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+        <!-- Adding page title -->
+        <title>VA Security Web</title>
+
+        <!-- Adding tab icon -->
+        <link rel="shortcut icon" href="images/acuity-icon.png">
+
+        <meta name="description" content=""/>
+        <meta name="viewport" content="width=device-width"/>
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/AngularJS-Toaster/toaster.css" />
+        <link rel="stylesheet" href="bower_components/angular-rangeslider/angular.rangeSlider.css" />
+        <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css" />
+        <link rel="stylesheet" href="bower_components/nouislider/distribute/jquery.nouislider.min.css" />
+        <link rel="stylesheet" href="bower_components/nouislider/distribute/jquery.nouislider.pips.min.css" />
+        <link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog.css" />
+        <link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog-theme-default.css" />
+        <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.css" />
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css({.tmp,app}) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css?1436887465"/>
+        <link rel="stylesheet" href="styles/angular.rangeSlider.css"/>
+        <link rel="stylesheet" href="styles/sideNavbar.css"/>
+        <link rel="stylesheet" href="styles/filters.css"/>
+        <link rel="stylesheet" href="styles/pages.css"/>
+        <!-- endbuild -->
+
+
+        <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+        <![endif]-->
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/es5-shim/es5-shim.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/json3/lib/json3.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.js"></script>
+        <script src="bower_components/underscore/underscore.js"></script>
+        <script src="bower_components/angular-underscore-module/angular-underscore-module.js"></script>
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="bower_components/AngularJS-Toaster/toaster.js"></script>
+        <script src="bower_components/lodash/lodash.js"></script>
+        <script src="bower_components/d3/d3.js"></script>
+        <script src="bower_components/angular-rangeslider/angular.rangeSlider.js"></script>
+        <script src="bower_components/ng-grid/build/ng-grid.js"></script>
+        <script src="bower_components/nouislider/distribute/jquery.nouislider.all.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="bower_components/StackBlur/index.js"></script>
+        <script src="bower_components/rgbcolor/index.js"></script>
+        <script src="bower_components/angular-native-dragdrop/draganddrop.js"></script>
+        <script src="bower_components/d3-tip/index.js"></script>
+        <script src="bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js"></script>
+        <script src="bower_components/angular-scroll/angular-scroll.js"></script>
+        <script src="bower_components/bootbox/bootbox.js"></script>
+        <script src="bower_components/ngDialog/js/ngDialog.js"></script>
+        <script src="bower_components/ngBootbox/dist/ngBootbox.js"></script>
+        <script src="bower_components/ngstorage/ngStorage.js"></script>
+        <script src="bower_components/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js"></script>
+        <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
+        <script src="bower_components/checklist-model/checklist-model.js"></script>
+        <script src="bower_components/alasql/alasql.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/utilServices.js"></script>
+        <script src="scripts/constants.js"></script>
+        <script src="scripts/modules.js"></script>
+        <script src="scripts/directives.js"></script>
+        <script src="scripts/filters.js"></script>
+        <script src="scripts/template/templateControllers.js"></script>
+        <script src="scripts/template/moduleTemplateController.js"></script>
+        <script src="scripts/logging/loggingServices.js"></script>
+
+        <script src="scripts/myAnalytics/myAnalyticsServices.js"></script>
+        <script src="scripts/myAnalytics/myAnalyticsControllers.js"></script>
+        <script src="scripts/myAnalytics/myAnalyticsGroupUserAccessController.js"></script>
+        <script src="scripts/myAnalytics/myAnalyticsUserAccessControllers.js"></script>        
+        <script src="scripts/myAnalytics/myAnalyticsFilters.js"></script>
+
+        <script src="scripts/security/securityServices.js"></script>
+        <script src="scripts/security/securityDirectives.js"></script>
+
+        <!-- endbuild -->
+
+        <!-- Theoretically application can work in IE, please remove string below to allow IE -->
+        <!--[if IE]><script type="text/javascript">var angular = null;</script><![endif]-->
+    </head>
+    <body>
+
+
+        <!-- Page contents -->
+        <div ui-view>
+            <!--[if IE]>
+            <div class="container">
+                <div class="jumbotron">
+                    <img src="images/acuity-logo.png"
+                         width="195" class="pull-right">
+
+                    <h1>Unsupported browser.</h1>
+
+                    <p><font color="red">
+                        VA Security currently supports Google Chrome browser only, please use Chrome to access VA Security.
+                    </font>
+                    </p>
+
+                </div>
+            </div>
+            <![endif]-->
+        </div>
+
+    </body>
+</html>
+

@@ -1,0 +1,93 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="panel-body">
+    <div ng-show="MODEL.loading" class="analytics-loader">
+        <img src="images/loader.gif">
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+
+            <h4>{{drugProgramme.name}} Info </h4>
+
+            <div> Date added: {{MODEL.aclInfo.addedDate | date}}</div>
+            <br/>
+        </div>
+        <div class="col-md-6">
+            <div ng-show="MODEL.aclInfo.studyModules.length > 0">
+                <a ng-href="#/myAnalytics/studies/{{ listAndJoinNames(MODEL.aclInfo.studyModules, ' or ') | doubleEscape}}"
+                   ng-click="selectRow(1)" class="btn btn-link pull-right">
+                    <span class="glyphicon glyphicon-list"></span>&nbsp;Show
+                </a>
+
+                <h4> Clinical studies </h4>
+
+                <ul>
+                    <li ng-repeat="roi in MODEL.aclInfo.studyModules"> {{roi.name}}</li>
+                </ul>
+                <br/>
+            </div>
+            <div ng-show="MODEL.aclInfo.studyModules.length === 0">
+                <h4> No clinical studies </h4>
+                <br/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div ng-show="MODEL.aclInfo.spotfireModules.length > 0">
+                <a ng-href="#/myAnalytics/spotfire/{{ listAndJoinNames(MODEL.aclInfo.spotfireModules, ' or ') | doubleEscape}}"
+                   ng-click="selectRow(2)" class="btn btn-link pull-right">
+                    <span class="glyphicon glyphicon-list"></span>&nbsp;Show
+                </a>
+
+                <h4> Spotfire Modules </h4>
+                <ul>
+                    <li ng-repeat="roi in MODEL.aclInfo.spotfireModules"> {{roi.name}}</li>
+                </ul>
+                <br/>
+            </div>
+            <div ng-show="MODEL.aclInfo.spotfireModules.length === 0">
+                <h4> No spotfire modules </h4>
+                <br/>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <a ng-click="loadUserPermissions();" class="btn pull-right btn-link"
+               ng-switch="SecurityAuth.hasPermission('EDIT_AUTHORISED_USERS', drugProgramme)">
+                <span class="glyphicon glyphicon-user"></span>&nbsp;
+                <span ng-switch-when="true">Edit</span>
+                <span ng-switch-when="false">View</span>
+            </a>
+            <h4> Users
+                <button style="font-size: 9px; padding: 0"
+                        class="btn btn-link btn-xs btn-xs-text" role="link"
+                        ng-disabled="!MODEL.aclInfo.usersAmount"
+                        name="op" title="Shows all the users who have access" ng-click="viewGrantedUsers()">Show
+                </button>
+                <button style="font-size: 9px; padding: 0"
+                        class="btn btn-link btn-xs btn-xs-text" role="link"
+                        ng-disabled="!MODEL.aclInfo.usersAmount"
+                        name="ex" title="Export all the users who have access" ng-click="exportGrantedUsers()">Export
+                </button>
+            </h4>
+
+            <div ng-show="MODEL.aclInfo.usersAmount > 0"> Users: {{MODEL.aclInfo.usersAmount}}</div>
+            <br/>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,5 @@
+{
+    "predef": [ "angular", "nv", "d3", "_", "$", "console", "bootbox", "alasql", "btoa", "html2canvas", "XMLSerializer"],
+    "globalstrict": true,
+    "maxcomplexity": 9
+}

@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div ng-controller="TemplateController">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand " ui-sref="home">VA Security</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" rct-allowed-admin-or-above rct:hide="false">
+                    <li ng-class="{ active: isActive('/myAnalytics/datasets')}">
+                        <a data-ui-sref="datasets">Analytics</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<span
+                                class="glyphicon glyphicon-cog"><b class="caret"></b></span></a>
+                        <ul class="dropdown-menu">
+
+                            <li>
+                                <a ui-sref="userAccess">Edit Global Administrators</a>
+                            </li>
+                            <li>
+                                <a ui-sref="trainedUsers">Edit Trained users</a>
+                            </li>
+                            <li>
+                                <a ui-sref="noneTrainedUsers">Add Trained users</a>
+                            </li>
+                            <li>
+                                <a ui-sref="groupAccess">Edit Groups</a>
+                            </li>
+                            <li>
+                                <a ui-sref="individualUsers">View Individual user</a>
+                            </li>
+                            <li class="divider">
+                            <li>
+                                <a ng-click="clearApplicationCache()">Clear cache</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <p class=" pull-right navbar-text" style="cursor:default">{{fullName}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="content" ui-view>
+    </div>
+
+    <!-- Notifications -->
+    <toaster-container
+            toaster-options="{'time-out': 3000, 'close-button':true, 'position-class': 'toast-bottom-right'}"></toaster-container>
+
+
+</div>

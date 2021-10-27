@@ -1,0 +1,55 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="ngdialog-message">
+    <h2>Link {{MODEL.linkedUser.linkFromPerson.name}} 
+        <div ng-show="hasSelectedLinkedUser()"> to {{MODEL.linkedUser.selectedLinkToPerson.name}}
+            <button ng-click="link(MODEL.linkedUser.linkFromPerson, MODEL.linkedUser.selectedLinkToPerson) && closeThisDialog('Done')" type="button" class="btn btn-primary pull-right">Link</button> 
+        </div>
+    </h2>
+
+    <div>
+        <label>
+            Search for linked user:
+        </label>                
+        <div class="input-group">
+            <input
+                type="text"
+                ng-model="MODEL.linkedUser.linkToPerson"
+                placeholder="Search for linked user..."
+                typeahead="linkToPerson as linkToPerson.nameAndId for linkToPerson in MODEL.users.allTrainedUsers | filter:$viewValue:contains | limitTo:10"
+                typeahead-wait-ms="200"
+                typeahead-min-length="1"
+                class="form-control"
+                typeahead-template-url="linkedUserItemTemplate.html"   
+                typeahead-on-select="onTypeHeadSelect($item)"
+                id="typeahead"
+                >
+
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+                <!--<div ng-show="Model.isLoading" class="loader"></div>-->
+            </span>
+        </div>       
+    </div>
+
+    <script type="text/ng-template" id="linkedUserItemTemplate.html">
+        <a>
+            <span bind-html-unsafe="match.model.nameAndId | typeaheadHighlight:query"></span>      
+        </a>
+    </script>
+
+</div>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acuity.va.auditlogger.dao.LockdownRepository">
+               
+    <resultMap type="com.acuity.va.auditlogger.domain.LockdownPeriod" id="lockdown">
+        <id property="startDate" column="STARTDATE"  />       
+        <id property="endDate" column="ENDDATE"  />       
+        <collection property="logOperations" resultMap="logOperation" />                
+    </resultMap>
+    
+    <resultMap type="com.acuity.va.auditlogger.domain.LogOperationEntity" id="logOperation">
+        <id property="logOperationId" column="LOG_ID"  />       
+        <result property="objectIdentityClassname" column="OBJECT_IDENTITY_CLASSNAME"  />       
+        <result property="objectIdentityId" column="OBJECT_IDENTITY_ID"  />       
+        <result property="name" column="LOG_NAME"  />       
+        <result property="owner" column="OWNER"  />       
+        <result property="dateCreated" column="DATECREATED"  />       
+        <result property="packageAndMethodName" column="PACKAGE_AND_METHOD_NAME"  />       
+        <result property="sessionId" column="SESSION_ID"  />       
+        <collection property="logArgs" resultMap="logArg" />                
+    </resultMap>
+    
+    <resultMap type="com.acuity.va.auditlogger.domain.LogArgEntity" id="logArg">
+        <id property="logArgId" column="LOG_ARG_ID"  />       
+        <result property="name" column="LOG_ARG_NAME"  />       
+        <result property="stringValue" column="LOG_ARG_STRING_VALUE"  />       
+        <result property="dateValue" column="LOG_ARG_DATE_VALUE"  />       
+        <result property="longValue" column="LOG_ARG_LONG_VALUE"  />       
+        <result property="floatValue" column="LOG_ARG_FLOAT_VALUE"  />       
+    </resultMap>
+     
+    <!--
+        Lockdown information
+    -->
+    <select id="getLockdowns" resultMap="lockdown" fetchSize="5000">
+        WITH lockdowns AS (
+            SELECT 
+            *
+            FROM log_operation 
+            WHERE (object_identity_classname != 'N/A' AND object_identity_id != -1)
+            AND (log_name= 'PERMISSIONS_SET_LOCKDOWN' OR log_name = 'PERMISSIONS_UNSET_LOCKDOWN')
+            <if test="_parameter.containsKey('roi')">
+               AND object_identity_id = #{roi.objectIdentityId} AND object_identity_classname = #{roi.objectIdentityClassname} 
+            </if>
+        ),
+        
+        startdate AS (
+              SELECT s.*, row_number() over() AS rnum  FROM (
+              SELECT DISTINCT object_identity_classname, object_identity_id, datecreated AS startdate FROM lockdowns 
+              WHERE log_name = 'PERMISSIONS_SET_LOCKDOWN'
+              ORDER BY datecreated desc) s
+        ), 
+        
+        enddate AS (
+              SELECT e.*, row_number() over () AS rnum  FROM (
+              SELECT DISTINCT object_identity_classname, object_identity_id, datecreated AS enddate FROM lockdowns 
+              WHERE log_name = 'PERMISSIONS_UNSET_LOCKDOWN'
+              ORDER BY datecreated desc) e
+        ),
+
+        alllogs AS (
+            SELECT 
+            log_operation.log_operation_id as log_id, datecreated, log_name, owner, package_and_method_name, session_id, object_identity_classname, object_identity_id, log_arg.*
+            FROM log_operation 
+            LEFT JOIN log_arg ON log_arg.log_operation_id = log_operation.log_operation_id
+            WHERE (
+                package_and_method_name LIKE '%.AclResource.%' OR 
+                package_and_method_name LIKE '%.StudyResource.%' OR 
+                package_and_method_name LIKE '%.UserGroupResource.%'
+            )
+        ),
+
+        intervals AS (
+            SELECT startdate.object_identity_classname, startdate.object_identity_id, startdate, enddate 
+            FROM startdate
+            JOIN enddate ON enddate.object_identity_id = startdate.object_identity_id AND 
+                enddate.object_identity_classname = startdate.object_identity_classname AND enddate.rnum = startdate.rnum
+            ORDER BY enddate.rnum
+        )
+
+        SELECT *
+         FROM intervals i
+         LEFT JOIN alllogs ON (i.object_identity_classname = alllogs.object_identity_classname 
+           AND i.object_identity_id = alllogs.object_identity_id AND i.startdate &lt;= alllogs.datecreated 
+         AND (alllogs.datecreated &lt;= i.enddate OR alllogs.datecreated IS NULL))
+
+    </select>
+    
+    <resultMap type="com.acuity.va.auditlogger.domain.Group" id="group">
+        <id property="name" column="to_group"  />  
+        <collection property="users" resultMap="userWithDate" />           
+    </resultMap>
+    
+    <resultMap type="com.acuity.va.auditlogger.domain.UserWithDate" id="userWithDate">
+        <id property="prid" column="user_added"  />       
+        <result property="added" column="date_added"  />       
+        <result property="grantedBy" column="grantedBy"  />       
+    </resultMap>
+    
+    <!--
+        Get the list of a groups users at a particular date
+    -->
+    <select id="getGroups" resultMap="group" fetchSize="1000">
+        WITH log_ids_group AS (
+            SELECT   
+             DISTINCT log_operation.log_operation_id, log_arg_string_value AS to_group
+              FROM log_operation 
+              JOIN log_arg ON log_arg.log_operation_id = log_operation.log_operation_id
+               WHERE 
+               log_arg_name = 'ACE_GROUP' AND log_name LIKE 'PERMISSIONS_%_GROUP' AND #{date} > datecreated
+        )        
+        
+        SELECT 
+
+        log_arg_string_value AS user_added, 
+        to_group,
+        date_added,
+        grantedBy
+
+        FROM (
+          SELECT 
+
+          RANK() OVER (PARTITION BY log_arg_string_value, to_group ORDER BY datecreated DESC) AS rn,
+          log_arg_string_value,
+          to_group,
+          log_name,
+          datecreated as date_added,
+          owner as grantedBy
+
+          FROM log_operation 
+           LEFT JOIN log_arg ON log_arg.log_operation_id = log_operation.log_operation_id
+           JOIN log_ids_group ON log_ids_group.log_operation_id = log_operation.log_operation_id
+           WHERE                
+           log_name like 'PERMISSIONS_%_GROUP' AND
+           #{date} > datecreated and log_arg_name = 'ACE_USER'
+        )
+        WHERE rn = 1 AND log_name LIKE 'PERMISSIONS_ADD_USER_TO_GROUP' 
+         <if test="_parameter.containsKey('group') and group != null">
+            AND to_group = #{group} 
+        </if>   
+        <if test="_parameter.containsKey('user') and user != null">
+            AND log_arg_string_value = #{user} 
+        </if>        
+    </select>
+    
+    <!--
+        Get the data owner for a particular time
+    -->
+    <select id="getDataowner" resultType="com.acuity.va.auditlogger.domain.DataOwner" fetchSize="1">
+        SELECT log_arg_string_value as name, datecreated as created FROM (
+            SELECT 
+
+            RANK() OVER (ORDER BY datecreated DESC) AS rn,
+            log_arg_string_value,
+            datecreated
+
+            FROM log_operation 
+             JOIN log_arg
+             ON log_arg.log_operation_id = log_operation.log_operation_id
+             WHERE object_identity_id = #{roi.objectIdentityId} AND object_identity_classname = #{roi.objectIdentityClassname} AND 
+             log_name = 'PERMISSIONS_REPLACE_DATAOWNER' AND #{date} > datecreated AND log_arg_name = 'ACE_USER'
+        )
+        WHERE rn = 1
+    </select>
+    
+    <!--
+        Has dataowner been removed sice been added.
+        1) Can be added by remove dataowner (handled by above query) 
+        2) or moved out or to another permission
+        This query handles 2)
+    -->
+    <select id="hasBeenRemovedAsDataOwner" resultType="boolean" fetchSize="1">
+        SELECT 
+            CASE 
+                WHEN count(*) = 0 
+                    THEN 0 
+                ELSE  1
+            END AS hasBeenRemoved 
+            
+        FROM (
+            SELECT 
+            
+            log_operation.*
+
+            FROM log_operation 
+             JOIN log_arg
+             ON log_arg.log_operation_id = log_operation.log_operation_id
+             WHERE object_identity_id = #{roi.objectIdentityId} AND object_identity_classname = #{roi.objectIdentityClassname} AND 
+             (log_name = 'PERMISSIONS_ADD_ACE' or log_name=  'PERMISSIONS_REMOVE_ACE') 
+            AND datecreated > #{dateAddedAsDataowner} 
+            AND #{dateGrantedUserPermission} > datecreated 
+            AND log_arg_name = 'ACE_USER'
+            and log_arg.LOG_ARG_STRING_VALUE = #{dataownerToCheck}
+        )
+    </select>
+    
+    <!--
+        Get the list of getAuthorisors for a particular time
+    -->
+    <select id="getAuthorisors" resultType="String" fetchSize="100">
+        <include refid="allLogs" />
+
+        SELECT DISTINCT log_arg_string_value from (
+            SELECT log_arg_string_value, log_name, datecreated, 
+            RANK() OVER (PARTITION BY log_arg_string_value ORDER BY datecreated DESC) AS rn
+            FROM
+             (  
+                SELECT * FROM alllogs
+                JOIN log_ids ON log_ids.log_operation_id = alllogs.log_operation_id
+                WHERE log_arg_name = 'ACE_USER' 
+                AND (permissionMask = 442383 OR (permissionMask IS NULL OR permissionMask = 0))
+                AND isgroup = 0
+             ) 
+        ) 
+        WHERE rn = 1 AND log_name = 'PERMISSIONS_ADD_ACE'
+    </select>
+            
+    <resultMap type="com.acuity.va.auditlogger.domain.RoiGrantedAccess" id="roiGrantedAccess">
+        <result property="sid" column="given_to"  />       
+        <result property="date" column="datecreated"  />       
+        <result property="grantedBy" column="added_by"  />       
+        <result property="permissionMask" column="permissionMask"  />       
+        <result property="isGroup" column="isGroup"  />       
+    </resultMap>
+    
+    <select id="getWhosGotAccess" resultMap="roiGrantedAccess" fetchSize="1000">
+        <include refid="whosGotAccess" />
+
+        SELECT * FROM whosGotAccess
+    </select>
+    
+    <sql id="whosGotAccess">
+        <include refid="allLogs" />,
+
+        whosGotAccess AS (
+            SELECT * FROM (
+                SELECT 
+                log_arg_string_value AS given_to, log_name AS action, datecreated, owner AS added_by, isGroup, permissionMask,
+                RANK() OVER (PARTITION BY log_arg_string_value ORDER BY datecreated DESC) AS rn
+                FROM
+                (  
+                  SELECT * FROM alllogs
+                  JOIN log_ids ON log_ids.log_operation_id = alllogs.log_operation_id
+                  WHERE log_arg_name = 'ACE_USER'
+                  <if test="_parameter.containsKey('user') and user != null">
+                    AND log_arg_string_value = #{user} 
+                  </if>
+                ) 
+            ) WHERE rn = 1 AND action = 'PERMISSIONS_ADD_ACE'
+        )
+    </sql>
+    
+    <sql id="allLogs">
+        WITH alllogs AS (
+            SELECT log_operation.log_operation_id AS lo_id, 
+            datecreated, log_name, owner, package_and_method_name, session_id, object_identity_classname, object_identity_id, log_arg.*
+                FROM log_operation
+                LEFT JOIN log_arg
+                ON log_arg.log_operation_id = log_operation.log_operation_id
+                WHERE package_and_method_name LIKE '%.AclResource.%' or package_and_method_name LIKE '%.AclRestService.%'
+        ),
+
+        log_ids_isgroup AS (
+            SELECT   
+             DISTINCT log_operation.log_operation_id, 
+             CASE 
+                WHEN log_arg_long_value is not null then log_arg_long_value
+                WHEN log_arg_string_value  = 'false' then 0
+                WHEN log_arg_string_value  = 'true' then 1
+              END
+              AS isGroup
+              FROM log_operation 
+              JOIN log_arg ON log_arg.log_operation_id = log_operation.log_operation_id
+               WHERE object_identity_id = #{roi.objectIdentityId} AND object_identity_classname = #{roi.objectIdentityClassname}
+               AND ( log_arg_name = 'ACE_ISGROUP'  )
+               AND log_name LIKE 'PERMISSIONS_%_ACE' AND #{date} > datecreated
+        ),
+        
+        log_ids_permissions AS (
+            SELECT   
+             DISTINCT log_operation.log_operation_id, log_arg_long_value as permissionMask
+              FROM log_operation 
+              JOIN log_arg ON log_arg.log_operation_id = log_operation.log_operation_id
+               WHERE object_identity_id = #{roi.objectIdentityId} AND object_identity_classname = #{roi.objectIdentityClassname}
+               AND ( log_arg_name = 'ACE_PERMISSION'  )
+               AND log_name LIKE 'PERMISSIONS_%_ACE' AND #{date} > datecreated
+        ),
+  
+        log_ids AS ( 
+            SELECT log_ids_permissions.log_operation_id, permissionMask, isGroup 
+            FROM log_ids_permissions
+            JOIN log_ids_isgroup ON log_ids_isgroup.log_operation_id = log_ids_permissions.log_operation_id
+        )        
+    </sql>
+    
+    <resultMap type="com.acuity.va.auditlogger.domain.User" id="userRemovedLockdown">
+        <id property="prid" column="user1"  />       
+        <result property="grantedTime" column="datecreated"  />       
+    </resultMap>
+    
+    <select id="getWhoRemovedLockdown" resultMap="userRemovedLockdown" fetchSize="1">
+        WITH lockdowns AS (
+           SELECT 
+            RANK() OVER (ORDER BY datecreated DESC) AS rn,
+            log_operation.*
+        
+            FROM log_operation 
+            WHERE (object_identity_classname != 'N/A' AND object_identity_id != -1)
+            AND log_name = 'PERMISSIONS_UNSET_LOCKDOWN'                     
+            <if test="_parameter.containsKey('roi')">
+               AND object_identity_id = #{roi.objectIdentityId} AND object_identity_classname = #{roi.objectIdentityClassname} 
+            </if>    
+            AND datecreated &lt;= #{date}
+        )
+                
+        SELECT owner AS user1, datecreated FROM lockdowns WHERE rn = 1
+    </select>
+</mapper>

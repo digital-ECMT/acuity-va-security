@@ -1,0 +1,97 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="ngdialog-content-small">
+    <div class="ngdialog-message">
+        <h2>Add group permission</h2>
+
+        <div>      
+            <div>
+                <div class="col-sm-11">
+                    <div>
+                        <!--                        <div class="pull-left" ng-show="PARENT_MODEL.groups.showScheduled">
+                                                    <label>Schedule: 
+                                                        <input type="checkbox" ng-model="PARENT_MODEL.groups.isScheduled">
+                                                    </label>
+                                                </div>-->
+                        <div class="pull-right dropdown">
+                            <label>            
+                                Groups 
+                            </label>
+                            &nbsp;&nbsp;
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                {{PARENT_MODEL.groups.selectedGroup}} <span class="caret"></span> 
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li ng-repeat="gp in PARENT_MODEL.groups.allGroups | orderBy"><a ng-click="selectGroupHandler(gp)">{{gp}}
+                                        <span ng-show="gp === PARENT_MODEL.groups.selectedGroup" class="glyphicon glyphicon-ok"></span></a></li>              
+                            </ul>
+                            <span>
+                                <button style="color:black" ng-click="viewUsersInGroupFromDialog(PARENT_MODEL.groups.selectedGroup)" title="View users in group" type="button" class="glyphicon glyphicon-info-sign btn-link" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="PARENT_MODEL.groups.isScheduled">
+                <div>
+                    <div class="col-sm-11" style="padding-top: 10px">
+                        <label class="col-sm-2 control-label">Start</label>
+                        <div class="col-sm-10 pull-right" style="padding-right: 0">
+                            <p class="input-group">
+                                <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="PARENT_MODEL.addScheduledUserPermission.start" is-open="PARENT_MODEL.addScheduledUserPermission.isOpenStart" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openStartCalendar($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>                
+                    </div> 
+                    <div class="col-sm-11">
+                        <label class="col-sm-2 control-label">End</label>
+                        <div class="col-sm-10 pull-right" style="padding-right: 0">
+                            <p class="input-group">
+                                <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="PARENT_MODEL.addScheduledUserPermission.end" is-open="PARENT_MODEL.addScheduledUserPermission.isOpenEnd" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openEndCalendar($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-11">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-9">
+                            <label style="color:red">{{PARENT_MODEL.addScheduledUserPermission.errorMessage}}</label>
+                        </div>
+                    </div>
+                </div>     
+            </div>     
+            <div class="row">
+                <div class="col-sm-11">
+
+                    <div class="pull-right input-group">
+                        <br />
+                        <div class="btn-toolbar">
+                            <button ng-click="closeThisDialog('Done')" title="Cancel" type="button" class="btn btn-default" >Cancel</button>            
+                            <button ng-disabled="!isGroupDialogValid()" ng-click="addGroupPermission() && closeThisDialog('Done')" title="Add group permissions" type="button" class="btn btn-primary">Add</button>            
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </div>             
+    </div>
+</div>

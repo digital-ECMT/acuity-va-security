@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.acuity.visualisations.va-security</groupId>
+        <artifactId>va-security-parent</artifactId>
+        <version>9.0-beryllium-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>va-security-security</artifactId>
+    <packaging>jar</packaging>
+    <name>VA Security security</name>
+    <description>va-security-security implementation</description>
+
+    <properties>
+        <sonar.sources>src/main,chrome-extension</sonar.sources>
+        <sonar.test>src/test</sonar.test>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptor>chrome-extension/assembly.xml</descriptor>
+                    <finalName>chrome-extension-${project.version}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.acuity.visualisations.va-security</groupId>
+            <artifactId>va-security-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.acuity.visualisations.va-security</groupId>
+            <artifactId>va-security-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>spring-security-config</artifactId>
+            <groupId>org.springframework.security</groupId>
+        </dependency>
+        <dependency>
+            <artifactId>spring-security-core</artifactId>
+            <groupId>org.springframework.security</groupId>
+        </dependency>
+        <dependency>
+            <artifactId>spring-security-web</artifactId>
+            <groupId>org.springframework.security</groupId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-acl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.acuity.visualisations.va-common</groupId>
+            <artifactId>va-common-auditlogger</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-oracle</artifactId>
+            <version>2.1.7</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+        </dependency>
+        
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp-wiser</artifactId>
+            <version>1.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>1.6.5</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.flyway</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>2.2.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.4.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.181</version>
+            <scope>test</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.oracle</groupId>-->
+<!--            <artifactId>ojdbc7</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>1.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>dbunit</artifactId>
+            <groupId>org.dbunit</groupId>
+            <type>jar</type>
+            <version>2.4.9</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.9.1</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--  Config -->
+        <dependency>
+            <groupId>com.acuity.visualisations.va-security</groupId>
+            <artifactId>va-security-config</artifactId>
+            <version>${project.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <scope>test</scope>
+            <version>2.44.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opera</groupId>
+            <artifactId>operadriver</artifactId>
+            <scope>test</scope>
+            <version>1.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-remote-driver</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+</project>

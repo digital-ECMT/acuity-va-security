@@ -1,0 +1,15 @@
+acuity:
+  security:
+    basic-auth:
+      users:
+        - username:   #Credentials for basic authentication
+          password:
+          roles:
+            - REMOTE_USER
+            - ACL_ADMINISTRATOR
+            - TRAINED_USER
+          authorities:
+            - ADMIN
+  vasecurity:
+    username:
+    password:

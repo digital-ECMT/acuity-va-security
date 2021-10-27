@@ -1,0 +1,63 @@
+/*
+ * Copyright 2021 The University of Manchester
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#chartStageDistribution{
+/*    margin-left:15px; */
+}
+#chartStageDistribution h5{
+    margin-left: 80px;
+    margin-bottom: -15px;
+}
+#chartStageDistribution .axis.x .tickText{
+    opacity: 0.01;
+}
+#chartCreatinineClearance-svg_yLabel{
+    top: 90px !important;
+}
+#chartCreatinineClearance .axis.x .tickText{
+    opacity: 0.01;
+}
+#legendStageDistribution{
+    margin-left: -30px;
+}
+
+#chartRenalLabResults h5{
+    margin-bottom: -40px !important;
+}
+#chartRenalLabResults-svg_xLabel{
+     bottom: -30px  !important;
+ }
+#chartRenalLabResults-svg_yLabel{
+    top: 110px !important;
+}
+#chartRenalLabResults .zoom-slider{
+    bottom: 10px !important;
+}
+#renalSubjectCreatinine_lineChart h5{
+    margin-top: 0 !important;
+}
+.renal-subject-section{
+    margin-bottom: 190px;
+}
+.debug {
+    border: dashed red 1px;
+}
+.not-allowed {
+    cursor: not-allowed;
+}
+.not-allowed * {
+    pointer-events: none;
+}

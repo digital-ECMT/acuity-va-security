@@ -1,0 +1,91 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div rct-allowed-admin-or-above class="container">
+    <div  class="row">
+        <div class="col-md-4">
+            <h1>
+                <span class="glyphicon glyphicon-stats"></span> My Analytics
+            </h1>
+
+            <div class="list-group">
+                <a ui-sref="drugProgrammes" id='btnDrugProg' class='list-group-item'
+                   ng-class="{'active': 0 == PARENT_MODEL.selectedRow.id}"
+                   ng-click="PARENT_MODEL.selectedRow.id = 0">
+
+                    Drug programmes
+                    <span class="badge" id="programmesCounter" value="32">
+                        {{PARENT_MODEL.filteredAclsCounts.drugProgrammes | filterCounts:PARENT_MODEL.allAcls.drugProgrammes.length}}
+                    </span>
+                </a>
+                <a ui-sref="studies" class='list-group-item'
+                   ng-class="{'active': 1 == PARENT_MODEL.selectedRow.id}"
+                   ng-click="PARENT_MODEL.selectedRow.id = 1">
+
+                    Clinical studies
+                    <span class="badge" id="studiesCounter" value="54">
+                        {{PARENT_MODEL.filteredAclsCounts.studies | filterCounts:PARENT_MODEL.allAcls.clinicalStudies.length}}
+                    </span>
+                </a>
+                <a ui-sref="datasets" class='list-group-item'
+                   ng-class="{'active': 2 == PARENT_MODEL.selectedRow.id}"
+                   ng-click="PARENT_MODEL.selectedRow.id = 2">
+
+                    Datasets
+                    <span class="badge" id="datasetsCounter" value="95">
+                        {{PARENT_MODEL.filteredAclsCounts.datasets | filterCounts:PARENT_MODEL.allAcls.datasets.length}}
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <h3>
+                            <img src="images/acuity-logo.png" width="150" class="pull-right">
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md7 col-md1 col-md-11" style="display: block;">
+                    <h4> Search my analytics </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-11">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter search term" id="searchInput" ng-model="PARENT_MODEL.searchTerm.name">
+                    </div>
+                    <a id="clearButton" class="btn btn-default pull-right" ng-click="PARENT_MODEL.searchTerm.name = ''" ng-show="PARENT_MODEL.searchTerm.name.length > 0">
+                        <span class="glyphicon"></span>Clear</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>
+        &nbsp;
+    </p>
+
+    <div ui-view>
+        <div ng-include="'views/myAnalytics/datasets.html'"></div>
+    </div>
+
+
+</div>

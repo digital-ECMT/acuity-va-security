@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+
+    <beans profile="!jndi-datasource">
+
+        <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" primary="true" destroy-method="close">
+            <property name="driverClassName" value="${spring.datasource.driver-class-name}"/>
+            <property name="url" value="${spring.datasource.url}"/>
+            <property name="username" value="${spring.datasource.username}"/>
+            <property name="password" value="${spring.datasource.password}"/>
+
+            <property name="initialSize" value="${spring.datasource.initial-size}"/>
+            <property name="maxActive" value="${spring.datasource.max-active}"/>
+            <property name="maxIdle" value="${spring.datasource.max-idle}"/>
+            <property name="minIdle" value="${spring.datasource.min-idle}"/>
+            <property name="maxWait" value="${spring.datasource.max-wait}"/>
+
+            <property name="testOnBorrow" value="${spring.datasource.test-on-borrow}"/>
+            <property name="testOnReturn" value="${spring.datasource.test-on-return}"/>
+            <property name="testWhileIdle" value="${spring.datasource.test-while-idle}"/>
+            <property name="validationQuery" value="${spring.datasource.validation-query}"/>
+        </bean>
+
+        <bean id="auditlogDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" >
+            <property name="driverClassName" value="${spring.datasource.driver-class-name}"/>
+            <property name="url" value="${spring.datasource.url}"/>
+            <property name="username" value="${spring.datasource.username}"/>
+            <property name="password" value="${spring.datasource.password}"/>
+
+            <property name="initialSize" value="${spring.datasource.initial-size}"/>
+            <property name="maxActive" value="${spring.datasource.max-active}"/>
+            <property name="maxIdle" value="${spring.datasource.max-idle}"/>
+            <property name="minIdle" value="${spring.datasource.min-idle}"/>
+            <property name="maxWait" value="${spring.datasource.max-wait}"/>
+
+            <property name="testOnBorrow" value="${spring.datasource.test-on-borrow}"/>
+            <property name="testOnReturn" value="${spring.datasource.test-on-return}"/>
+            <property name="testWhileIdle" value="${spring.datasource.test-while-idle}"/>
+            <property name="validationQuery" value="${spring.datasource.validation-query}"/>
+        </bean>
+
+    </beans>
+
+    <beans profile="jndi-datasource">
+        <jee:jndi-lookup id="dataSource" jndi-name="jdbc/ACUITY" expected-type="javax.sql.DataSource"/>
+
+        <jee:jndi-lookup id="auditlogDataSource" jndi-name="jdbc/ACUITY-LOGGING" expected-type="javax.sql.DataSource" />
+    </beans>
+
+</beans>

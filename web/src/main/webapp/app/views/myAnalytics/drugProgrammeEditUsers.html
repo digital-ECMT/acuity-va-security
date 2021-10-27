@@ -1,0 +1,180 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="panel-body">
+<!--<div ng-controller="MyAnalyticsEditUserController" class="panel-body">-->
+    <div ng-show="MODEL.loading" class="analytics-loader">
+        <img src="images/loader.gif">
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label>
+                Show users by:
+            </label>
+            <select ng-model="MODEL.searchUsersTerm.showBy" class="form-control">
+                <option value="name">
+                    Name
+                </option>
+                <option value="nameAndId">
+                    Name and User ID
+                </option>
+                <option value="userId">
+                    User ID
+                </option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label>
+                Search users:
+            </label>
+            <input type="text" class="form-control" placeholder="Enter search term" id="searchUsersInput" ng-model="MODEL.searchUsersTerm.name">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+        </div>
+        <div class="col-md-4" style="display: none;">
+            <h3>
+                Span 4
+            </h3>
+            <p>
+                Content
+            </p>
+        </div>
+        <div class="col-md-4" style="display: none;">
+            <h3>
+                Span 4
+            </h3>
+            <p>
+                Content
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+            </div>
+            <div class="form-group">
+            </div>
+            <label>
+                ACUITY Users (drag and drop):
+            </label>
+            <!-- See http://plnkr.co/edit/5RLvCpDPoRcEk6u77dBM?p=info for simple example of drag and drop -->
+            <ul ui-on-Drop="onDropAddUser($data, MODEL.permissions.trainedUsers, '0')"
+                drop-channel="{{ MyAnalyticsDNDUtils.getMyDroppableLocations('usersChannel', drugProgramme).join(',') }}"
+                drag-hover-class="users-on-drag-hover" class="list-group list-group-scroll list-group-scroll-trainedUsers">
+
+                <li ng-class="{'none-draggable-item': !MyAnalyticsDNDUtils.isDraggable(user, 'usersChannel', drugProgramme)}" class="list-group-item"
+                    on-drop-success="dropSuccessHandler(user, MODEL.permissions.trainedUsers)"
+                    drag-channel="usersChannel" ui-draggable="{{ MyAnalyticsDNDUtils.isDraggable(user, 'usersChannel', drugProgramme) }}"
+                    drag="user" ng-repeat="user in filteredTrainedUsers = (MODEL.permissions.trainedUsers | filterBySearchTerm:MODEL.searchUsersTerm | orderBy:'name')">
+                    {{ user | personDisplayName:MODEL.searchUsersTerm.showBy }}
+                </li>
+
+                <li  ng-hide="filteredTrainedUsers.length"  ng-class="'none-draggable-item'" class="list-group-item"
+                     on-drop-success="dropSuccessHandler(user, MODEL.permissions.trainedUsers)" drag-channel="usersChannel"
+                     ui-draggable="false" drag="user">
+                    Empty (filtered)
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+            </div>
+            <label>
+                Authorisers:
+            </label>
+            <ul ui-on-Drop="onDropAddUser($data, MODEL.permissions.authorisers, '442383')"
+                drop-channel="{{ MyAnalyticsDNDUtils.getMyDroppableLocations('authoriserChannel', drugProgramme).join(',') }}"
+                drag-hover-class="authorisers-on-drag-hover" class="list-group list-group-scroll list-group-scroll-authorisers">
+
+                <li ng-class="{'none-draggable-item': !MyAnalyticsDNDUtils.isDraggable(authoriser, 'authoriserChannel', drugProgramme) }" class="list-group-item"
+                    ng-repeat="authoriser in filteredAuthorisers  = (MODEL.permissions.authorisers | filterBySearchTerm:MODEL.searchUsersTerm  | orderBy:'name')"
+                    on-drop-success="dropSuccessHandler(authoriser, MODEL.permissions.authorisers)" drag-channel="authoriserChannel"
+                    ui-draggable="{{ MyAnalyticsDNDUtils.isDraggable(authoriser, 'authoriserChannel', drugProgramme) }}" drag="authoriser">
+                    {{ authoriser | personDisplayName:MODEL.searchUsersTerm.showBy }}
+                </li>
+
+                <li  ng-hide="filteredAuthorisers.length"  ng-class="'none-draggable-item'" class="list-group-item"
+                    on-drop-success="dropSuccessHandler(authoriser, MODEL.permissions.authorisers)" drag-channel="authoriserChannel"
+                    ui-draggable="false" drag="authoriser">
+                    Empty (filtered)
+                </li>
+            </ul>
+            <label>
+                Administrators:
+            </label>
+            <ul ui-on-Drop="onDropAddUser($data, MODEL.permissions.administrators, '32783')"
+                drop-channel="{{ MyAnalyticsDNDUtils.getMyDroppableLocations('administratorChannel', drugProgramme).join(',') }}"
+                drag-hover-class="administrators-on-drag-hover" class="list-group list-group-scroll list-group-scroll-administrator">
+
+                <li ng-class="{'none-draggable-item': !MyAnalyticsDNDUtils.isDraggable(administrator, 'administratorChannel', drugProgramme) }" class="list-group-item"
+                    ng-repeat="administrator in filteredAdministrators = (MODEL.permissions.administrators | filterBySearchTerm:MODEL.searchUsersTerm  | orderBy:'name')"
+                    on-drop-success="dropSuccessHandler(administrator, MODEL.permissions.administrators)" drag-channel="administratorChannel"
+                    ui-draggable="{{ MyAnalyticsDNDUtils.isDraggable(administrator, 'administratorChannel', drugProgramme) }}" drag="administrator">
+                    {{ administrator | personDisplayName:MODEL.searchUsersTerm.showBy }}
+                </li>
+
+                <li  ng-hide="filteredAdministrators.length"  ng-class="'none-draggable-item'" class="list-group-item"
+                     on-drop-success="dropSuccessHandler(administrator, MODEL.permissions.administrators)" drag-channel="administratorChannel"
+                     ui-draggable="false" drag="administrator">
+                    Empty (filtered)
+                </li>
+            </ul>
+            <label>
+                Authorised users:
+            </label>
+            <button ng-click="openImportUsersPermissionsDialog('3')" title="Import users" type="button" class="glyphicon glyphicon-import btn-link" />
+            <button ng-click="openAddGroupDialog(MODEL.permissions.authorisedUsers, '3')" title="Add group" type="button" class="glyphicon glyphicon-user btn-link" />
+       
+            <ul ui-on-Drop="onDropAddUser($data, MODEL.permissions.authorisedUsers, '3')"
+                drop-channel="{{ MyAnalyticsDNDUtils.getMyDroppableLocations('authorisedUserChannel', drugProgramme).join(',') }}"
+                drag-hover-class="authorisedUsers-on-drag-hover" class="list-group list-group-scroll list-group-scroll-authorisedUsers">
+
+                <li ng-class="{'none-draggable-item': !MyAnalyticsDNDUtils.isDraggable(authorisedUser, 'authorisedUserChannel', drugProgramme)}" class="list-group-item"
+                    ng-repeat="authorisedUser in filteredAuthorisedUsers = (MODEL.permissions.authorisedUsers | filterBySearchTerm:MODEL.searchUsersTerm | orderBy:'name')"
+                    on-drop-success="dropSuccessHandler(authorisedUser, MODEL.permissions.authorisedUsers)" drag-channel="authorisedUserChannel"
+                    ui-draggable="{{ MyAnalyticsDNDUtils.isDraggable(authorisedUser, 'authorisedUserChannel', drugProgramme) }}" drag="authorisedUser">
+                    {{ authorisedUser | personDisplayName:MODEL.searchUsersTerm.showBy }}
+                    
+                    <span ng-show="authorisedUser.group">
+                       <button style="color:black" ng-click="viewUsersInGroup(authorisedUser)" title="View users in group" type="button" class="glyphicon glyphicon-info-sign btn-link" />
+                    </span>
+                    
+                    <div class="pull-right">                      
+                        
+                       <span ng-show="!authorisedUser.isEmpty()">                   
+                            <button style="color:black" ng-click="removePermission(authorisedUser, MODEL.permissions.authorisedUsers)" title="Remove permission" type="button" class="glyphicon glyphicon-remove btn-link" />
+                        </span>  
+                    </div>
+                </li>
+
+                <li  ng-hide="filteredAuthorisedUsers.length"  ng-class="'none-draggable-item'" class="list-group-item"
+                     on-drop-success="dropSuccessHandler(authorisedUser, MODEL.permissions.authorisedUsers)" drag-channel="authorisedUserChannel"
+                     ui-draggable="false" drag="authorisedUser">
+                    Empty (filtered)
+                </li>
+            </ul>
+            
+            <span class="pull-right">
+                <a ng-click="loadUserViewPermissions();" class="btn btn-link">
+                    <span class="glyphicon glyphicon-user"></span>&nbsp;Edit Views
+                </a>
+            </span> 
+        </div>
+    </div>
+</div>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.acuity.visualisations.va-security</groupId>
+        <artifactId>va-security-parent</artifactId>
+        <version>9.0-beryllium-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>va-security</artifactId>
+    <packaging>war</packaging>
+    <name>VA Security web</name>
+    <description>va-security SpringBoot implementation</description>
+
+    <properties>
+        <sonar.sources>src/main,src/main/webapp/app/scripts,src/main/webapp/app/styles,src/main/webapp/app/views,src/main/webapp/test</sonar.sources>
+        <maven.deploy.skip>false</maven.deploy.skip>
+        <docker.buildArg.WAR_NAME>${project.build.finalName}.war</docker.buildArg.WAR_NAME>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.acuity.visualisations.va-security</groupId>
+            <artifactId>va-security-rest</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.samaxes.filter</groupId>
+            <artifactId>cachefilter</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.181</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.oracle</groupId>-->
+<!--            <artifactId>ojdbc7</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Connection pool -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>8.5.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.flyway</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>2.2.1</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+      
+        <plugins>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.1.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <prefix>git</prefix>
+                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+                    <verbose>false</verbose>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <skipPoms>true</skipPoms>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <abbrevLength>7</abbrevLength>
+                    <skip>false</skip>
+                    <gitDescribe>
+                        <skip>true</skip>
+                    </gitDescribe>
+                </configuration>
+
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/webapp/dist</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>src/main/webapp/.tmp</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <executable>true</executable>
+                    <mainClass>com.acuity.va.security.Application</mainClass>
+                    <addResources>false</addResources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>grunt</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/webapp/app/views</directory>
+                        <filtering>true</filtering>
+                        <targetPath>app/views</targetPath>
+                    </resource>
+                </resources>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.6</version>
+                        <configuration>
+                            <delimiters>
+                                <delimiter>${*}</delimiter>
+                            </delimiters>
+                            <useDefaultDelimiters>false</useDefaultDelimiters>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/webapp/app</directory>
+                                    <targetPath>app</targetPath>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </webResources>
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>install node and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <arguments>install bower grunt grunt-cli</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>bower install</id>
+                                <goals>
+                                    <goal>bower</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <nodeVersion>v6.9.1</nodeVersion>
+                            <npmVersion>3.10.8</npmVersion>
+                            <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>
+                            <npmDownloadRoot>https://registry.npmjs.org/npm/-/</npmDownloadRoot>
+                            <workingDirectory>${basedir}/src/main/webapp</workingDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.34.1</version>
+                        <executions>
+                            <execution>
+                                <id>start-id</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>deploy-id</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>push</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <registry>ghcr.io</registry>
+                            <images>
+                                <image>
+                                    <name>ghcr.io/digital-ecmt/${project.artifactId}</name>
+                                    <build>
+                                        <dockerFile>${project.basedir}/Dockerfile</dockerFile >
+                                        <tags>
+                                            <tag>latest</tag>
+                                            <tag>${project.version}</tag>
+                                        </tags>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

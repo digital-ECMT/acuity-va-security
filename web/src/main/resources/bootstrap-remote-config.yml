@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: vasecurity
+  cloud:
+    config:
+      enabled: true

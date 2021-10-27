@@ -1,0 +1,46 @@
+<!--
+  ~ Copyright 2021 The University of Manchester
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="analytics">
+    <accordion close-others="true">
+
+        <accordion-group
+                ng-class="{'panel-default': study.id !== PARENT_MODEL.selectedAcl.clinicalStudyId,
+                'panel-primary': study.id === PARENT_MODEL.selectedAcl.clinicalStudyId}"
+                ng-repeat="study in PARENT_MODEL.allAcls.clinicalStudies | filterOr:PARENT_MODEL.searchTerm ">
+
+            <div ng-controller="MyAnalyticsClinicalStudyAclController">
+                <accordion-heading>
+                    <span ng-click="loadClinicalStudy()">{{study.name}}</span>
+                    &nbsp;
+                    <small ng-click="loadClinicalStudy()">{{study.drugProgramme}}</small>
+                    <i class="pull-right glyphicon" ng-click="MODEL.isEditPage = false; loadClinicalStudy();
+                        $event.stopPropagation();" ng-class="{'glyphicon-chevron-left': MODEL.isEditPage }"></i>
+
+                </accordion-heading>
+
+                <div class="animate-switch-container" ng-switch="MODEL.pageType">
+                    <div class="animate-switch" ng-switch-when="edit">
+                        <div ng-include="'views/myAnalytics/studyEditUsers.html'"></div>
+                    </div>
+                    <div class="animate-switch" ng-switch-when="info">
+                        <div ng-include="'views/myAnalytics/studyShowInfo.html'"></div>
+                    </div>
+                </div>
+            </div>
+        </accordion-group>
+    </accordion>
+</div>

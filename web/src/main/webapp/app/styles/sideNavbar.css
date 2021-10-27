@@ -1,0 +1,86 @@
+/*
+ * Copyright 2021 The University of Manchester
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*Standardized side bar format for Navigation
+
+for usage, please see   views/help/_sidebar.html
+                   or  views/help/_collapsedSidebar.html
+*/
+
+
+.fixed {
+    position: fixed;
+}
+
+/* help page sidebar */
+.sideNavbar {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* all links */
+.sideNavbar .nav>li>a {
+    padding: 4px 20px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #999;
+}
+
+/* nested links */
+.sideNavbar .nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 13px;
+    color: #999;
+}
+
+/* nested links lvl 2 */
+.sideNavbar .nav .nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 50px;
+    font-size: 12px;
+    color: #999;
+}
+
+.sideNavbar .nav>.active>a {  color: #000000; }
+
+.sideNavbar .nav .nav>.active>a {  color: #000000; }
+
+.sideNavbar .nav .nav .nav>.active>a {  color: #000000; }
+
+/* hide all (inactive) nested list */
+.sideNavbar .nav ul.nav {
+    display: none;
+}
+
+/* hide all (inactive) nested list lvl 2 */
+.sideNavbar .nav .nav ul.nav {
+    display: none;
+}
+
+/* show active nested list */
+.sideNavbar .nav>.active>ul.nav {
+    display: block;
+}
+
+/* show active nested list lvl 2 */
+.sideNavbar .nav .nav>.active>ul.nav {
+    display: block;
+}

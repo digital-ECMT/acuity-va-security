@@ -1,0 +1,32 @@
+{
+  "@odata.context": "some value",
+  "@odata.nextLink": "another value",
+  "value": [
+    {
+      "businessPhones": [],
+      "displayName": "User 1 display name",
+      "givenName": "User1 name",
+      "jobTitle": null,
+      "mail": null,
+      "mobilePhone": null,
+      "officeLocation": null,
+      "preferredLanguage": null,
+      "surname": "User1 surname",
+      "userPrincipalName": "user_1@email.com",
+      "id": "user1id"
+    },
+    {
+      "businessPhones": [],
+      "displayName": "User 2 display name",
+      "givenName": "User2 name",
+      "jobTitle": null,
+      "mail": "user_2@email.com",
+      "mobilePhone": null,
+      "officeLocation": null,
+      "preferredLanguage": null,
+      "surname": "User2 surname",
+      "userPrincipalName": "user_2_email.com#EXT#somethingelse",
+      "id": "user2id"
+    }
+  ]
+}
